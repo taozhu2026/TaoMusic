@@ -1,6 +1,13 @@
 # Changelog
 
-## 0.2.0 - Unreleased
+## 0.4.0 - Unreleased
+
+- Refined the hero hierarchy with calmer typography and a more consistent intro label treatment
+- Stabilized the muse/share card density and proportions across common laptop and desktop widths
+- Improved overall layout behavior with more controlled breakpoint transitions and column balance
+- Added a formal product and engineering plan for Muse Bubble Mode in [`docs/muse-bubble-mode-plan.md`](docs/muse-bubble-mode-plan.md)
+
+## 0.2.0 - 2026-03-10
 
 - Added a lightweight TaoMusic brand identity system with SVG exploration assets
 - Integrated the chosen logo direction into the header and favicon

@@ -86,14 +86,17 @@ export function ContextForm({
   return (
     <section className="heroPanel">
       <div className="heroCopy">
-        <p className="eyebrow">Contextual music muse</p>
+        <div className="heroLabelRow">
+          <span className="heroLabelDot" aria-hidden="true" />
+          <p className="heroLabel">Contextual music muse</p>
+        </div>
         <h1 className="heroTitle">
           <span className="heroTitleLine">Describe the room, the hour,</span>
           <span className="heroTitleLine heroTitleLineSoft">and the color around you.</span>
         </h1>
         <p className="heroText">
           A few human signals become three songs, one poetic line, and a small
-          detour that still feels coherent.
+          detour that still holds together.
         </p>
       </div>
 
