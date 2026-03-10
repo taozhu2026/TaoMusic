@@ -2,7 +2,11 @@
 
 import { useDeferredValue, useState, useTransition } from 'react';
 
-import { ContextForm } from '@/src/features/recommendations/components/context-form';
+import { TaoMusicLockup } from '@/src/brand/taomusic-logo';
+import {
+  ContextForm,
+  type RecommendationAction,
+} from '@/src/features/recommendations/components/context-form';
 import type { RecommendationPreset } from '@/src/features/recommendations/components/preset-strip';
 import { ResultsPanel } from '@/src/features/recommendations/components/results-panel';
 
@@ -25,6 +29,9 @@ export function RecommendationExperience() {
   const [result, setResult] = useState<RecommendationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeAction, setActiveAction] = useState<RecommendationAction | null>(null);
+  const [lastCompletedAction, setLastCompletedAction] =
+    useState<RecommendationAction | null>(null);
   const [recentIds, setRecentIds] = useState<string[]>([]);
   const [, startTransition] = useTransition();
   const deferredResult = useDeferredValue(result);
@@ -49,8 +56,12 @@ export function RecommendationExperience() {
   const activeTone =
     deferredResult?.serendipity.tone ?? deferredResult?.contextProfile.tone ?? 'quiet';
 
-  const requestRecommendation = async (overrides?: Partial<RecommendationInput>) => {
+  const requestRecommendation = async (
+    action: RecommendationAction,
+    overrides?: Partial<RecommendationInput>,
+  ) => {
     setIsLoading(true);
+    setActiveAction(action);
     setError(null);
 
     try {
@@ -76,11 +87,13 @@ export function RecommendationExperience() {
 
       startTransition(() => {
         setResult(payload);
+        setLastCompletedAction(action);
         setRecentIds((current) => [...new Set([...current, ...nextIds])].slice(-12));
       });
     } catch {
       setError('recommendation_failed');
     } finally {
+      setActiveAction(null);
       setIsLoading(false);
     }
   };
@@ -92,13 +105,7 @@ export function RecommendationExperience() {
       data-tone={activeTone}
     >
       <header className="topBanner">
-        <div className="brandMark">
-          <span className="brandDisc" />
-          <div>
-            <p className="brandName">TaoMusic</p>
-            <p className="brandTag">A small AI music muse for atmosphere and drift.</p>
-          </div>
-        </div>
+        <TaoMusicLockup />
         <div className="topBannerMeta">
           <span className="metaChip">session-only</span>
           <span className="metaChip">under 5s target</span>
@@ -107,17 +114,26 @@ export function RecommendationExperience() {
       </header>
 
       <div className="experienceLayout">
-      <ContextForm
-        canReroll={Boolean(result?.recommendations.length)}
-        isLoading={isLoading}
-        onApplyPreset={applyPreset}
-        onChange={handleChange}
-        onGenerate={() => requestRecommendation()}
-        onReroll={() => requestRecommendation({ excludeIds: recentIds })}
-        onSurprise={() => requestRecommendation({ surprise: true, excludeIds: recentIds })}
-        values={formValues}
-      />
-      <ResultsPanel error={error} isLoading={isLoading} result={deferredResult} />
+        <ContextForm
+          activeAction={activeAction}
+          canReroll={Boolean(result?.recommendations.length)}
+          isLoading={isLoading}
+          onApplyPreset={applyPreset}
+          onChange={handleChange}
+          onGenerate={() => requestRecommendation('generate')}
+          onReroll={() => requestRecommendation('reroll', { excludeIds: recentIds })}
+          onSurprise={() =>
+            requestRecommendation('surprise', { surprise: true, excludeIds: recentIds })
+          }
+          values={formValues}
+        />
+        <ResultsPanel
+          activeAction={activeAction}
+          error={error}
+          isLoading={isLoading}
+          lastCompletedAction={lastCompletedAction}
+          result={deferredResult}
+        />
       </div>
     </div>
   );

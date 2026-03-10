@@ -7,6 +7,9 @@ import { SeedMusicProvider } from '@/src/services/music-provider/seed';
 
 import type {
   MusicCandidate,
+  ProviderDebugSummary,
+  ProviderKind,
+  ProviderStatus,
   QueryPlan,
   RecommendationInput,
   RecommendationResponse,
@@ -48,6 +51,26 @@ const deduplicateCandidates = (candidates: MusicCandidate[]): MusicCandidate[] =
   });
 };
 
+const buildProviderUsedLabel = (providers: ProviderDebugSummary[]): string => {
+  const successful = providers.filter(
+    (provider) => provider.status === 'success' && provider.candidateCount > 0,
+  );
+
+  if (successful.length === 0) {
+    return 'seed-library fallback';
+  }
+
+  return successful.map((provider) => provider.name).join(' + ');
+};
+
+interface ProviderFetchResult {
+  candidates: MusicCandidate[];
+  kind: ProviderKind;
+  message?: string;
+  provider: string;
+  status: ProviderStatus;
+}
+
 export const createRecommendation = async (
   input: RecommendationInput,
 ): Promise<RecommendationResponse> => {
@@ -56,11 +79,27 @@ export const createRecommendation = async (
   const queryPlan = buildQueryPlan(contextProfile);
   const providers = getMusicProviders();
 
-  const providerResults = await Promise.all(
-    providers.map(async (provider) => ({
-      provider: provider.name,
-      candidates: await provider.fetchCandidates(queryPlan),
-    })),
+  const providerResults: ProviderFetchResult[] = await Promise.all(
+    providers.map(async (provider) => {
+      try {
+        const candidates = await provider.fetchCandidates(queryPlan);
+
+        return {
+          candidates,
+          kind: provider.kind,
+          provider: provider.name,
+          status: 'success' as const,
+        };
+      } catch (error) {
+        return {
+          candidates: [],
+          kind: provider.kind,
+          message: error instanceof Error ? error.message : 'Unknown provider error.',
+          provider: provider.name,
+          status: 'failed' as const,
+        };
+      }
+    }),
   );
 
   let candidates = deduplicateCandidates(
@@ -70,6 +109,13 @@ export const createRecommendation = async (
   if (candidates.length === 0) {
     const fallbackProvider = new SeedMusicProvider();
     candidates = await fallbackProvider.fetchCandidates(queryPlan);
+    providerResults.push({
+      candidates,
+      kind: fallbackProvider.kind,
+      message: 'Fallback seed library applied after external retrieval returned nothing.',
+      provider: `${fallbackProvider.name}-recovery`,
+      status: 'success',
+    });
   }
 
   const ranked = scoreCandidates(
@@ -87,7 +133,22 @@ export const createRecommendation = async (
     serendipity,
     debug: {
       appliedSurprise: contextProfile.surpriseLabel,
-      providerUsed: providerResults.map((result) => result.provider).join(', '),
+      providerUsed: buildProviderUsedLabel(
+        providerResults.map((result) => ({
+          candidateCount: result.candidates.length,
+          kind: result.kind,
+          message: result.message,
+          name: result.provider,
+          status: result.status,
+        })),
+      ),
+      providers: providerResults.map((result) => ({
+        candidateCount: result.candidates.length,
+        kind: result.kind,
+        message: result.message,
+        name: result.provider,
+        status: result.status,
+      })),
       latencyMs: Date.now() - startedAt,
       candidateCount: candidates.length,
     },

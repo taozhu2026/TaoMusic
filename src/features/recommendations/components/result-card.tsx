@@ -10,7 +10,10 @@ export function ResultCard({ index, recommendation }: ResultCardProps) {
   const confidence = Math.round(recommendation.score * 100);
 
   return (
-    <article className="resultCard">
+    <article
+      className="resultCard"
+      style={{ animationDelay: `${index * 80}ms` }}
+    >
       <div className="resultCardHeader">
         <div className="resultIndexBlock">
           <span className="resultIndex">0{index + 1}</span>

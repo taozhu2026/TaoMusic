@@ -39,7 +39,10 @@ export function ShareActions({ result }: ShareActionsProps) {
       <Button onClick={handleCopy} type="button" variant="secondary">
         {copied ? 'Copied' : 'Copy muse card'}
       </Button>
-      <span className="shareHint">Clean text for notes, messages, or a social post.</span>
+      <span className="shareHint">
+        Clean text for notes, messages, or a social post. The panel below is tuned
+        to be screenshot-friendly.
+      </span>
     </div>
   );
 }

@@ -1,8 +1,8 @@
-# TaoMusic v0.1
+# TaoMusic v0.2
 
-TaoMusic is a lightweight AI-assisted web app for contextual music discovery and creative inspiration. A user gives a few human signals such as activity, mood, color, country, genre, or lyrical theme, and the app returns a small set of music suggestions plus a short serendipity line.
+TaoMusic is a lightweight AI-assisted web app for contextual music discovery and creative inspiration. Users provide a few human signals such as activity, mood, color, country, genre, or lyrical theme, and the app returns a small set of music suggestions plus a compact serendipity line.
 
-This repository is the first usable MVP: a single-page Next.js app with a deterministic recommendation pipeline, curated fallback data, and optional external adapters for richer metadata and text generation.
+v0.2 is a productization pass on top of the first MVP. It does not rewrite the app. It strengthens identity, shareability, and external music realism while preserving the explicit recommendation pipeline and zero-config fallback behavior.
 
 ## Product Description
 
@@ -17,14 +17,24 @@ It is an `AI music muse`:
 - fast
 - session-only
 - aesthetically driven
-- explainable in how it matches context to music
+- explainable in how it maps context to music
 - resilient when external APIs are unavailable
+
+## What Changed in v0.2
+
+- Added a lightweight brand identity MVP with a chosen logo direction and favicon
+- Added documented brand explorations in [`docs/brand-directions.md`](docs/brand-directions.md)
+- Upgraded Spotify integration from a basic optional search hook to a safer candidate-enrichment path
+- Preserved the seed library as a guaranteed fallback path
+- Added a screenshot-friendly share-card panel in addition to text copy
+- Improved loading, reroll, and surprise feedback
+- Kept the app deployable with no auth and no database
 
 ## Current Features
 
 ### Fully implemented
 
-- Single-page web experience with a styled editorial UI
+- Single-page web experience with editorial UI
 - Context form for `activity`, `mood`, `color`, `country`, `genre`, and `lyrical theme`
 - Preset moods for quick exploration
 - Recommendation API endpoint at `POST /api/recommend`
@@ -35,9 +45,10 @@ It is an `AI music muse`:
   - weighted scoring
   - diversity pass
   - final result shaping
-- Session-style reroll behavior through recent-result exclusion
-- Surprise mode that injects an extra signal when the user wants drift
-- Clipboard share action for the current result
+- Reroll flow with recent-result exclusion
+- Surprise flow that injects one additional signal
+- Clipboard-based text sharing
+- Screenshot-friendly share-card panel
 - Health endpoint at `GET /api/health`
 - Production build verified with `npm run build`
 - Type safety verified with `npm run typecheck`
@@ -45,14 +56,14 @@ It is an `AI music muse`:
 ### Implemented with fallback behavior
 
 - Music retrieval always works through the curated local seed library in [`data/seed-candidates.ts`](data/seed-candidates.ts)
+- External Spotify enrichment is optional and non-blocking
+- If Spotify lookup fails, the request still resolves through the local library
 - Serendipity line generation falls back to local templates if no LLM key is configured or the LLM call fails
-- Recommendation quality remains usable even with no third-party credentials
 
-### Optional integrations already wired
+### Optional external integrations currently supported
 
-- Spotify search adapter for expanding candidate retrieval
-- OpenAI-compatible chat completion adapter for serendipity line generation
-- Configurable OpenAI-compatible base URL for alternative providers
+- Spotify track search plus artist-genre enrichment
+- OpenAI-compatible chat completion for serendipity lines
 
 ## Local Run Instructions
 
@@ -91,7 +102,7 @@ npm run typecheck
 npm run build
 ```
 
-### Run the full local release check
+### Run the full local verification pass
 
 ```bash
 npm run check
@@ -107,14 +118,14 @@ npm run start
 
 Copy `.env.example` to `.env.local` and add only what you need.
 
-### Required for the base MVP
+### Required for the base product
 
-None. The app works with the curated fallback dataset and template serendipity lines.
+None. TaoMusic works end to end with the local seed library and template serendipity output.
 
 ### Optional
 
 - `SPOTIFY_CLIENT_ID`
-  - Enables Spotify candidate retrieval
+  - Enables Spotify metadata and candidate enrichment
 - `SPOTIFY_CLIENT_SECRET`
   - Enables Spotify OAuth token acquisition
 - `OPENAI_API_KEY`
@@ -123,23 +134,17 @@ None. The app works with the curated fallback dataset and template serendipity l
   - Defaults to `gpt-4.1-mini`
 - `OPENAI_BASE_URL`
   - Defaults to `https://api.openai.com/v1`
-  - Useful for OpenAI-compatible providers
+  - Allows OpenAI-compatible providers
 
-## Current Implementation Status
+## External vs Fallback Behavior
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| UI shell and layout | Complete | MVP-ready single-page experience |
-| Recommendation scoring pipeline | Complete | Rule-based plus weighted scoring |
-| Seed music catalog | Complete | Main zero-config fallback path |
-| Surprise and reroll interactions | Complete | Session-local only |
-| Share action | Complete | Clipboard-based |
-| Spotify retrieval | Optional | Works only when credentials are configured |
-| LLM serendipity generation | Optional with fallback | Template fallback is always available |
-| Persistence / user accounts | Not implemented | Intentionally out of scope for v0.1 |
-| Database | Not implemented | Not needed for current MVP |
-| Audio previews / playback | Not implemented | No playback integration in v0.1 |
-| Recommendation learning / personalization | Not implemented | No saved history or user model |
+| Seed music catalog | Fallback baseline | Always available |
+| Spotify retrieval and enrichment | Optional external | Used only when credentials are configured |
+| Serendipity LLM generation | Optional external | Falls back to template copy |
+| Recommendation scoring and ranking | Local and explicit | Never outsourced |
+| Share-card rendering | Local and complete | No external service required |
 
 ## Project Structure
 
@@ -149,13 +154,18 @@ app/
     health/
     recommend/
   globals.css
+  icon.svg
   layout.tsx
   page.tsx
 data/
   seed-candidates.ts
 docs/
+  brand-directions.md
   planning-brief.md
+public/
+  brand/
 src/
+  brand/
   components/ui/
   config/
   features/recommendations/
@@ -165,40 +175,24 @@ src/
 
 ## Known Limitations
 
-- The curated seed dataset is intentionally small, so some combinations will feel repetitive over time.
-- Spotify search results are only lightly enriched; they do not yet include deep genre, lyrical theme, or artwork-color analysis.
-- The LLM prompt layer is intentionally narrow and only generates one short line, not explanations or full prose.
-- There is no persistence, no session storage restore, and no user account system.
-- Share output is plain text only; there is no image card export yet.
-- There is no automated test suite yet beyond typecheck and production build verification.
-- Public release housekeeping is still incomplete until a project license is chosen.
+- The curated seed dataset is still intentionally small, so some combinations may repeat over time.
+- Spotify enrichment improves realism, but the app still does not have deep lyrical-theme or artwork-color understanding from external data.
+- Region handling for external tracks is still lightweight and inferred from the query context rather than verified track geography.
+- Share export is screenshot-oriented, not a generated image or downloadable artifact.
+- There is still no persistence, no accounts, and no database.
+- There is still no automated test suite beyond typecheck and production build verification.
 
-## Next-Step Roadmap
+## Deferred for Future Versions
 
-### Near-term stabilization
+- Last.fm or multi-provider enrichment
+- Richer metadata fusion and better region/theme inference
+- Export-to-image or downloadable share assets
+- Lightweight browser persistence
+- Personalization and long-term recommendation memory
+- Audio preview or playback integration
 
-- Add a small automated test layer around the recommendation pipeline
-- Add a GitHub Actions workflow for `npm run check`
-- Improve adapter error logging and request observability
-- Expand the curated seed catalog with better tag coverage
+## Notes
 
-### Product improvements
-
-- Better Spotify enrichment and candidate blending
-- More deliberate reroll diversification rules
-- Share-card export or image snapshot
-- Lightweight session persistence in browser storage
-
-### Longer-term ideas
-
-- Multi-provider music retrieval
-- Better metadata enrichment for lyrical themes and artwork color
-- Personalization without full account complexity
-- Embedding-based similarity experiments
-
-## Notes for GitHub v0.1
-
-- The repository is ready for an initial GitHub push as `v0.1.0`
-- The MVP works without external credentials
-- The planning brief used during ideation is archived in [`docs/planning-brief.md`](docs/planning-brief.md)
-- The repository now includes an MIT `LICENSE`
+- The selected v0.2 identity direction is documented in [`docs/brand-directions.md`](docs/brand-directions.md)
+- The original ideation brief is archived in [`docs/planning-brief.md`](docs/planning-brief.md)
+- The repository includes an MIT [`LICENSE`](LICENSE)

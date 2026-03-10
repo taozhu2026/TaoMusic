@@ -1,0 +1,15 @@
+<svg width="320" height="96" viewBox="0 0 320 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(8 8)">
+    <circle cx="40" cy="40" r="28" fill="#F8F0E5"/>
+    <circle cx="40" cy="40" r="21" stroke="#2B1B0F" stroke-width="2.4"/>
+    <circle cx="40" cy="40" r="5.4" fill="#2B1B0F"/>
+    <path d="M18 34C22.7 21.7 31.4 14 41.7 14C49.9 14 56.4 17.4 60.7 23.7" stroke="#2B1B0F" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M55.8 49.5C51.8 55.8 45.2 60 37.2 60C27.5 60 19.3 54 15 45.4" stroke="#2B1B0F" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="59.2" cy="23.5" r="3" fill="#B56A2A"/>
+    <circle cx="15" cy="45.5" r="2.6" fill="#B56A2A"/>
+  </g>
+  <g transform="translate(104 22)" fill="#2B1B0F">
+    <text x="0" y="28" font-size="34" font-family="Baskerville, serif" letter-spacing="-0.03em">TaoMusic</text>
+    <text x="0" y="52" font-size="11" font-family="'Courier New', monospace" letter-spacing="0.16em" opacity="0.66">VINYL / ORBIT / RESONANCE</text>
+  </g>
+</svg>

@@ -16,7 +16,10 @@ import { SignalSummary } from '@/src/features/recommendations/components/signal-
 
 import type { RecommendationInput } from '@/src/features/recommendations/types';
 
+export type RecommendationAction = 'generate' | 'reroll' | 'surprise';
+
 interface ContextFormProps {
+  activeAction: RecommendationAction | null;
   canReroll: boolean;
   isLoading: boolean;
   onApplyPreset: (preset: RecommendationPreset) => void;
@@ -70,6 +73,7 @@ const PRESETS: RecommendationPreset[] = [
 ];
 
 export function ContextForm({
+  activeAction,
   canReroll,
   isLoading,
   onApplyPreset,
@@ -163,10 +167,10 @@ export function ContextForm({
 
         <div className="actionsRow">
           <Button disabled={isLoading} onClick={onGenerate} type="button">
-            {isLoading ? 'Listening...' : 'Generate'}
+            {activeAction === 'generate' ? 'Composing...' : 'Generate'}
           </Button>
           <Button disabled={isLoading} onClick={onSurprise} type="button" variant="secondary">
-            Add surprise
+            {activeAction === 'surprise' ? 'Detouring...' : 'Add surprise'}
           </Button>
           <Button
             disabled={!canReroll || isLoading}
@@ -174,7 +178,7 @@ export function ContextForm({
             type="button"
             variant="ghost"
           >
-            Reroll
+            {activeAction === 'reroll' ? 'Rerolling...' : 'Reroll'}
           </Button>
         </div>
 

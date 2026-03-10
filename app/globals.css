@@ -126,16 +126,23 @@ body::after {
   align-items: center;
 }
 
-.brandDisc {
+.brandMarkWrap {
   display: inline-flex;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 3rem;
+  height: 3rem;
   border: 1px solid rgba(38, 23, 12, 0.12);
   border-radius: 50%;
-  background:
-    radial-gradient(circle at center, rgba(245, 240, 231, 0.2) 0 19%, rgba(38, 23, 12, 0.92) 20% 21%, transparent 22%),
-    linear-gradient(135deg, rgba(255, 247, 231, 0.9), rgba(231, 214, 184, 0.75));
-  box-shadow: inset 0 0 0 6px rgba(255, 251, 244, 0.56);
+  background: linear-gradient(135deg, rgba(255, 248, 236, 0.96), rgba(236, 220, 195, 0.78));
+  box-shadow:
+    inset 0 0 0 5px rgba(255, 251, 244, 0.56),
+    0 10px 24px rgba(80, 53, 28, 0.12);
+  color: var(--accent);
+}
+
+.brandMarkSvg {
+  width: 100%;
+  height: 100%;
+  padding: 0.28rem;
 }
 
 .brandName,
@@ -199,6 +206,7 @@ body::after {
   background: var(--surface);
   box-shadow: var(--shadow);
   backdrop-filter: blur(18px);
+  animation: riseIn 520ms ease both;
 }
 
 .heroPanel {
@@ -431,7 +439,8 @@ body::after {
 .actionsRow,
 .shareRow,
 .badgeRow,
-.reasonRow {
+.reasonRow,
+.providerBadgeRow {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -559,6 +568,7 @@ body::after {
   background:
     linear-gradient(180deg, rgba(255, 253, 249, 0.98) 0%, rgba(251, 246, 238, 0.92) 100%);
   padding: 1.2rem;
+  animation: riseIn 420ms ease both;
 }
 
 .resultCardHeader {
@@ -613,6 +623,177 @@ body::after {
   text-transform: uppercase;
 }
 
+.providerBadge {
+  border-radius: 999px;
+  padding: 0.42rem 0.72rem;
+  font-family: var(--label-font);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+}
+
+.providerBadge-fallback {
+  border: 1px solid rgba(181, 97, 42, 0.16);
+  background: rgba(233, 183, 122, 0.16);
+}
+
+.providerBadge-external {
+  border: 1px solid rgba(79, 111, 149, 0.18);
+  background: rgba(185, 208, 236, 0.2);
+}
+
+.providerBadge-failed {
+  opacity: 0.56;
+}
+
+.shareCardSection {
+  display: grid;
+}
+
+.shareCardPreview {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  min-height: 420px;
+  border: 1px solid rgba(38, 23, 12, 0.1);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 224, 180, 0.42), transparent 28%),
+    linear-gradient(160deg, rgba(255, 250, 244, 0.98) 0%, rgba(245, 234, 218, 0.96) 100%);
+  padding: 1.4rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+.shareCardPreview::after {
+  position: absolute;
+  right: -2rem;
+  bottom: -2rem;
+  width: 12rem;
+  height: 12rem;
+  border-radius: 50%;
+  border: 1px solid rgba(38, 23, 12, 0.08);
+  content: "";
+}
+
+.shareCardHeader,
+.shareCardBrand,
+.shareCardItem {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.shareCardHeader {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.shareCardBrandMark {
+  display: inline-flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(38, 23, 12, 0.1);
+  border-radius: 50%;
+  background: rgba(255, 250, 243, 0.9);
+  color: var(--accent);
+}
+
+.shareCardBrandSvg {
+  width: 100%;
+  height: 100%;
+  padding: 0.24rem;
+}
+
+.shareCardBrandName,
+.shareCardBrandTag,
+.shareCardLine,
+.shareCardItemTitle,
+.shareCardItemArtist {
+  margin: 0;
+}
+
+.shareCardBrandName {
+  font-family: var(--display-font);
+  font-size: 1.1rem;
+}
+
+.shareCardBrandTag,
+.shareCardTone,
+.shareCardSignal,
+.shareCardItemIndex {
+  font-family: var(--label-font);
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+.shareCardBrandTag,
+.shareCardTone,
+.shareCardItemArtist {
+  color: var(--text-muted);
+}
+
+.shareCardTone {
+  border: 1px solid rgba(38, 23, 12, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 251, 246, 0.92);
+  padding: 0.35rem 0.65rem;
+  font-size: 0.72rem;
+}
+
+.shareCardLine {
+  max-width: 18ch;
+  font-family: var(--display-font);
+  font-size: clamp(2rem, 4vw, 2.7rem);
+  line-height: 0.98;
+}
+
+.shareCardSignalRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.shareCardSignal {
+  border-bottom: 1px solid rgba(38, 23, 12, 0.15);
+  padding-bottom: 0.15rem;
+  font-size: 0.7rem;
+}
+
+.shareCardList {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: auto;
+}
+
+.shareCardItem {
+  align-items: flex-start;
+  border-top: 1px solid rgba(38, 23, 12, 0.08);
+  padding-top: 0.8rem;
+}
+
+.shareCardItemIndex {
+  min-width: 2rem;
+  color: var(--accent);
+  font-size: 0.72rem;
+}
+
+.shareCardItemMeta {
+  display: grid;
+  gap: 0.16rem;
+}
+
+.shareCardItemTitle {
+  font-family: var(--display-font);
+  font-size: 1.25rem;
+  line-height: 1.02;
+}
+
+.shareCardItemArtist {
+  font-size: 0.94rem;
+}
+
 .loadingPanel,
 .emptyPanel,
 .errorPanel {
@@ -648,6 +829,18 @@ body::after {
 
   100% {
     background-position: -200% 0;
+  }
+}
+
+@keyframes riseIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

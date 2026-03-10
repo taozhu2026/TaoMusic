@@ -23,6 +23,7 @@ const buildCandidateKeywords = (candidate: MusicCandidate): string[] => {
 };
 
 export class SeedMusicProvider implements MusicProvider {
+  kind: 'fallback' = 'fallback';
   name = 'seed-library';
 
   async fetchCandidates(plan: QueryPlan): Promise<MusicCandidate[]> {

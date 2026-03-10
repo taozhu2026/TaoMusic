@@ -62,6 +62,17 @@ export interface RankedRecommendation {
   matchReasons: string[];
 }
 
+export type ProviderKind = 'external' | 'fallback';
+export type ProviderStatus = 'success' | 'failed';
+
+export interface ProviderDebugSummary {
+  candidateCount: number;
+  kind: ProviderKind;
+  message?: string;
+  name: string;
+  status: ProviderStatus;
+}
+
 export interface SerendipityOutput {
   line: string;
   tone: string;
@@ -75,6 +86,7 @@ export interface RecommendationResponse {
   debug: {
     appliedSurprise?: string;
     providerUsed: string;
+    providers: ProviderDebugSummary[];
     latencyMs: number;
     candidateCount: number;
   };
