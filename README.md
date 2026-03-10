@@ -201,4 +201,4 @@ src/
 - The repository is ready for an initial GitHub push as `v0.1.0`
 - The MVP works without external credentials
 - The planning brief used during ideation is archived in [`docs/planning-brief.md`](docs/planning-brief.md)
-- Before making the repository public, choose and add a license
+- The repository now includes an MIT `LICENSE`
