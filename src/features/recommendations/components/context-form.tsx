@@ -87,10 +87,13 @@ export function ContextForm({
     <section className="heroPanel">
       <div className="heroCopy">
         <p className="eyebrow">Contextual music muse</p>
-        <h1 className="heroTitle">Describe the room, the hour, and the color around you.</h1>
+        <h1 className="heroTitle">
+          <span className="heroTitleLine">Describe the room, the hour,</span>
+          <span className="heroTitleLine heroTitleLineSoft">and the color around you.</span>
+        </h1>
         <p className="heroText">
-          TaoMusic turns a few human signals into a tiny listening constellation:
-          three songs, one poetic line, and just enough surprise to feel discovered.
+          A few human signals become three songs, one poetic line, and a small
+          detour that still feels coherent.
         </p>
       </div>
 

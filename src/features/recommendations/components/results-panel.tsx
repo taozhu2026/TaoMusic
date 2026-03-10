@@ -1,4 +1,8 @@
 import type { RecommendationAction } from '@/src/features/recommendations/components/context-form';
+import {
+  buildResultSummaryText,
+  buildResultSummaryTitle,
+} from '@/src/features/recommendations/result-summary';
 import { ResultCard } from '@/src/features/recommendations/components/result-card';
 import { ShareActions } from '@/src/features/recommendations/components/share-actions';
 import { ShareCardPreview } from '@/src/features/recommendations/components/share-card-preview';
@@ -103,14 +107,17 @@ export function ResultsPanel({
       : lastCompletedAction === 'surprise'
         ? 'surprise detour applied'
         : undefined;
+  const summaryTitle = buildResultSummaryTitle(result);
+  const summaryText = buildResultSummaryText(result);
 
   return (
     <section className="resultsPanel">
       <div className="resultsHeader">
         <div className="resultsIntro">
-          <div>
-            <p className="eyebrow">Generated constellation</p>
-            <h2 className="resultsTitle">{result.serendipity.line}</h2>
+          <div className="resultsSummaryBlock">
+            <p className="eyebrow">Current constellation</p>
+            <h2 className="resultsTitle resultsTitleCompact">{summaryTitle}</h2>
+            <p className="resultsSummary">{summaryText}</p>
           </div>
           <div className="resultsLedger">
             <div className="ledgerItem">
@@ -128,35 +135,36 @@ export function ResultsPanel({
           </div>
         </div>
 
-        <div className="badgeRow">
-          {actionLabel ? <span className="badge accentBadge">{actionLabel}</span> : null}
-          {result.debug.appliedSurprise ? (
-            <span className="badge accentBadge">{result.debug.appliedSurprise}</span>
-          ) : null}
-          <span className="badge">{result.serendipity.source}</span>
-          <span className="badge">{result.contextProfile.tone}</span>
-        </div>
+        <div className="resultsMetaStack">
+          <div className="badgeRow">
+            {actionLabel ? <span className="badge accentBadge">{actionLabel}</span> : null}
+            {result.debug.appliedSurprise ? (
+              <span className="badge accentBadge">{result.debug.appliedSurprise}</span>
+            ) : null}
+            <span className="badge">{result.serendipity.source}</span>
+            <span className="badge">{result.contextProfile.tone}</span>
+          </div>
 
-        <div className="providerBadgeRow">
-          {result.debug.providers.map((provider) => (
-            <span
-              className={[
-                'providerBadge',
-                `providerBadge-${provider.kind}`,
-                `providerBadge-${provider.status}`,
-              ].join(' ')}
-              key={`${provider.name}-${provider.status}`}
-            >
-              {provider.name} · {provider.status}
-            </span>
-          ))}
+          <div className="providerBadgeRow">
+            {result.debug.providers.map((provider) => (
+              <span
+                className={[
+                  'providerBadge',
+                  `providerBadge-${provider.kind}`,
+                  `providerBadge-${provider.status}`,
+                ].join(' ')}
+                key={`${provider.name}-${provider.status}`}
+              >
+                {provider.name} · {provider.status}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
-      <SignalSummary title="Interpreted signal" values={result.contextProfile.raw} />
-
-      <ShareActions result={result} />
       <ShareCardPreview result={result} />
+      <ShareActions result={result} />
+      <SignalSummary title="Interpreted signal" values={result.contextProfile.raw} />
 
       <div className="cardsGrid">
         {result.recommendations.map((recommendation, index) => (
