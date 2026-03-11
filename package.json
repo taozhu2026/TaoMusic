@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "catalog:check": "tsc -p scripts/tsconfig.catalog-check.json && node .catalog-check/scripts/validate-catalog.js",
+    "catalog:build": "tsc -p scripts/tsconfig.catalog-build.json && node .catalog-build/scripts/build-catalog.js",
+    "catalog:check": "npm run catalog:build && tsc -p scripts/tsconfig.catalog-check.json && node .catalog-check/scripts/validate-catalog.js",
     "check": "npm run typecheck && npm run catalog:check && npm run build",
     "start": "next start",
     "typecheck": "tsc --noEmit"

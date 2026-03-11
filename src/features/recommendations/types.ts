@@ -5,6 +5,12 @@ export type FocusLevel = 'focus' | 'balanced' | 'expressive';
 export type TempoTag = 'slow' | 'steady' | 'midtempo' | 'driving' | 'fast';
 export type ValenceTag = 'dim' | 'soft' | 'bright' | 'uplifting';
 
+export interface CatalogSourceRefs {
+  lastfm?: string;
+  musicbrainz?: string;
+  spotify?: string;
+}
+
 export interface RecommendationInput {
   activity?: string;
   color?: string;
@@ -50,6 +56,7 @@ export interface MusicCandidate {
   artist: string;
   artworkColorHint?: string;
   artworkUrl?: string;
+  descriptorTags?: string[];
   energyLevel?: EnergyLevel;
   focusLevel?: FocusLevel;
   genreTags: string[];
@@ -63,6 +70,7 @@ export interface MusicCandidate {
   sceneTags?: string[];
   searchKeywords: string[];
   source: string;
+  sourceRefs?: CatalogSourceRefs;
   tempoTag?: TempoTag;
   title: string;
   valenceTag?: ValenceTag;

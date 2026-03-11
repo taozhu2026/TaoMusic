@@ -16,6 +16,7 @@ const buildCandidateKeywords = (candidate: MusicCandidate): string[] => {
     ...candidate.genreTags,
     ...candidate.moodTags,
     ...(candidate.sceneTags ?? []),
+    ...(candidate.descriptorTags ?? []),
     ...candidate.instrumentationTags,
     ...candidate.lyricalThemeTags,
     ...candidate.searchKeywords,

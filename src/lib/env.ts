@@ -1,4 +1,5 @@
 export interface AppEnv {
+  lastFmApiKey?: string;
   spotifyClientId?: string;
   spotifyClientSecret?: string;
   openAiApiKey?: string;
@@ -12,6 +13,7 @@ const trimEnv = (value: string | undefined): string | undefined => {
 };
 
 export const env: AppEnv = {
+  lastFmApiKey: trimEnv(process.env.LASTFM_API_KEY),
   spotifyClientId: trimEnv(process.env.SPOTIFY_CLIENT_ID),
   spotifyClientSecret: trimEnv(process.env.SPOTIFY_CLIENT_SECRET),
   openAiApiKey: trimEnv(process.env.OPENAI_API_KEY),
@@ -23,3 +25,4 @@ export const hasSpotifyConfig = (): boolean =>
   Boolean(env.spotifyClientId && env.spotifyClientSecret);
 
 export const hasLlmConfig = (): boolean => Boolean(env.openAiApiKey);
+export const hasLastFmConfig = (): boolean => Boolean(env.lastFmApiKey);
