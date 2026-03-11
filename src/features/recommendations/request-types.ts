@@ -1,4 +1,5 @@
 import type { BubbleDraft, RecommendationMode } from '@/src/features/recommendations/experience-types';
+import type { InspirationImagePayload } from '@/src/features/recommendations/inspiration-image/types';
 import type { RecommendationInput, RecommendationResponse } from '@/src/features/recommendations/types';
 
 export interface RecommendationRequestPayload {
@@ -24,3 +25,5 @@ export interface ResultFetchResponse {
   record: StoredRecommendationRecord;
   resultId: string;
 }
+
+export type InspirationImageResponse = InspirationImagePayload;

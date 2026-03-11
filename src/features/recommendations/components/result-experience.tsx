@@ -10,6 +10,7 @@ import { getUiCopy } from '@/src/i18n/copy';
 import { usePreferences } from '@/src/providers/preferences-provider';
 import { buildBubbleInput } from '@/src/features/recommendations/bubbles/engine';
 import { ConstellationFlipPanel } from '@/src/features/recommendations/components/constellation-flip-panel';
+import { InspirationImageCard } from '@/src/features/recommendations/components/inspiration-image-card';
 import { ResultControlCluster } from '@/src/features/recommendations/components/result-control-cluster';
 import { ResultCard } from '@/src/features/recommendations/components/result-card';
 import { saveHomeDrafts } from '@/src/features/recommendations/home-drafts';
@@ -268,6 +269,7 @@ export function ResultExperience({ initialResultId }: ResultExperienceProps) {
                 onChangeFace={setFlipFace}
                 result={result}
               />
+              {resultId ? <InspirationImageCard language={language} resultId={resultId} /> : null}
             </div>
 
             <div className="resultRouteRight">

@@ -11,7 +11,7 @@ import {
 import { Button } from '@/src/components/ui/button';
 import { SelectField } from '@/src/components/ui/select-field';
 import { getUiCopy } from '@/src/i18n/copy';
-import { SignalSummary } from '@/src/features/recommendations/components/signal-summary';
+import { StructuredSelectionBox } from '@/src/features/recommendations/components/structured-selection-box';
 
 import type { UiLanguage } from '@/src/i18n/types';
 import type { RecommendationAction } from '@/src/features/recommendations/experience-types';
@@ -102,80 +102,76 @@ export function ContextForm({
           <p className="manifestoLabel">{copy.home.howItThinks}</p>
           <p className="manifestoText">{copy.home.howItThinksText}</p>
         </div>
-        <SignalSummary
-          emptyText={copy.common.noSignal}
-          language={language}
-          title={copy.home.pinnedSignal}
-          values={values}
-        />
       </div>
 
       <div className="formPanel">
-        <div className="fieldGrid">
-          <SelectField
-            hint={copy.fields.activity.hint}
-            index="01"
-            label={copy.fields.activity.label}
-            options={localizeOptions(ACTIVITY_OPTIONS, language)}
-            placeholder={copy.fields.activity.placeholder}
-            value={values.activity ?? ''}
-            onChange={(value) => onChange('activity', value)}
-          />
-          <SelectField
-            hint={copy.fields.mood.hint}
-            index="02"
-            label={copy.fields.mood.label}
-            options={localizeOptions(MOOD_OPTIONS, language)}
-            placeholder={copy.fields.mood.placeholder}
-            value={values.mood ?? ''}
-            onChange={(value) => onChange('mood', value)}
-          />
-          <SelectField
-            hint={copy.fields.color.hint}
-            index="03"
-            label={copy.fields.color.label}
-            options={localizeOptions(COLOR_OPTIONS, language)}
-            placeholder={copy.fields.color.placeholder}
-            value={values.color ?? ''}
-            onChange={(value) => onChange('color', value)}
-          />
-          <SelectField
-            hint={copy.fields.country.hint}
-            index="04"
-            label={copy.fields.country.label}
-            options={localizeOptions(COUNTRY_OPTIONS, language)}
-            placeholder={copy.fields.country.placeholder}
-            value={values.country ?? ''}
-            onChange={(value) => onChange('country', value)}
-          />
-          <SelectField
-            hint={copy.fields.genre.hint}
-            index="05"
-            label={copy.fields.genre.label}
-            options={localizeOptions(GENRE_OPTIONS, language)}
-            placeholder={copy.fields.genre.placeholder}
-            value={values.genre ?? ''}
-            onChange={(value) => onChange('genre', value)}
-          />
-          <SelectField
-            hint={copy.fields.scene.hint}
-            index="06"
-            label={copy.fields.scene.label}
-            options={localizeOptions(SCENE_OPTIONS, language)}
-            placeholder={copy.fields.scene.placeholder}
-            value={values.scene ?? ''}
-            onChange={(value) => onChange('scene', value)}
-          />
-          <SelectField
-            hint={copy.fields.lyricalTheme.hint}
-            index="07"
-            label={copy.fields.lyricalTheme.label}
-            options={localizeOptions(LYRICAL_THEME_OPTIONS, language)}
-            placeholder={copy.fields.lyricalTheme.placeholder}
-            value={values.lyricalTheme ?? ''}
-            onChange={(value) => onChange('lyricalTheme', value)}
-          />
-        </div>
+        <StructuredSelectionBox language={language} values={values}>
+          <div className="fieldGrid">
+            <SelectField
+              hint={copy.fields.activity.hint}
+              index="01"
+              label={copy.fields.activity.label}
+              options={localizeOptions(ACTIVITY_OPTIONS, language)}
+              placeholder={copy.fields.activity.placeholder}
+              value={values.activity ?? ''}
+              onChange={(value) => onChange('activity', value)}
+            />
+            <SelectField
+              hint={copy.fields.mood.hint}
+              index="02"
+              label={copy.fields.mood.label}
+              options={localizeOptions(MOOD_OPTIONS, language)}
+              placeholder={copy.fields.mood.placeholder}
+              value={values.mood ?? ''}
+              onChange={(value) => onChange('mood', value)}
+            />
+            <SelectField
+              hint={copy.fields.color.hint}
+              index="03"
+              label={copy.fields.color.label}
+              options={localizeOptions(COLOR_OPTIONS, language)}
+              placeholder={copy.fields.color.placeholder}
+              value={values.color ?? ''}
+              onChange={(value) => onChange('color', value)}
+            />
+            <SelectField
+              hint={copy.fields.country.hint}
+              index="04"
+              label={copy.fields.country.label}
+              options={localizeOptions(COUNTRY_OPTIONS, language)}
+              placeholder={copy.fields.country.placeholder}
+              value={values.country ?? ''}
+              onChange={(value) => onChange('country', value)}
+            />
+            <SelectField
+              hint={copy.fields.genre.hint}
+              index="05"
+              label={copy.fields.genre.label}
+              options={localizeOptions(GENRE_OPTIONS, language)}
+              placeholder={copy.fields.genre.placeholder}
+              value={values.genre ?? ''}
+              onChange={(value) => onChange('genre', value)}
+            />
+            <SelectField
+              hint={copy.fields.scene.hint}
+              index="06"
+              label={copy.fields.scene.label}
+              options={localizeOptions(SCENE_OPTIONS, language)}
+              placeholder={copy.fields.scene.placeholder}
+              value={values.scene ?? ''}
+              onChange={(value) => onChange('scene', value)}
+            />
+            <SelectField
+              hint={copy.fields.lyricalTheme.hint}
+              index="07"
+              label={copy.fields.lyricalTheme.label}
+              options={localizeOptions(LYRICAL_THEME_OPTIONS, language)}
+              placeholder={copy.fields.lyricalTheme.placeholder}
+              value={values.lyricalTheme ?? ''}
+              onChange={(value) => onChange('lyricalTheme', value)}
+            />
+          </div>
+        </StructuredSelectionBox>
 
         <div className="actionsRow">
           <Button disabled={!canGenerate || isLoading} onClick={onGenerate} type="button">

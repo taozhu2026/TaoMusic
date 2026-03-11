@@ -22,6 +22,7 @@ import { ModeSwitch } from '@/src/features/recommendations/components/mode-switc
 import { MuseBubblePanel } from '@/src/features/recommendations/components/muse-bubble-panel';
 import { PreferenceToggles } from '@/src/features/recommendations/components/preference-toggles';
 import { PresetStrip } from '@/src/features/recommendations/components/preset-strip';
+import { HomeSignalPanel } from '@/src/features/recommendations/components/home-signal-panel';
 import {
   loadHomeDrafts,
   saveHomeDrafts,
@@ -306,6 +307,13 @@ export function HomeExperience() {
             presets={STRUCTURED_PRESETS}
             text={copy.home.startingPointText}
             title={copy.home.startingPoints}
+          />
+
+          <HomeSignalPanel
+            emptyText={copy.common.noSignal}
+            language={language}
+            title={mode === 'bubble' ? copy.home.translatedSignal : copy.home.pinnedSignal}
+            values={mode === 'bubble' ? bubbleInput : structuredDraft}
           />
         </aside>
       </div>

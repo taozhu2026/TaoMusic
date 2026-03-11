@@ -45,7 +45,8 @@ const buildMuseTags = (
 
       return getOptionLabel(FIELD_OPTION_MAP[key], value, language);
     })
-    .filter((value): value is string => Boolean(value));
+    .filter((value): value is string => Boolean(value))
+    .slice(0, 4);
 };
 
 export function ConstellationFlipPanel({
@@ -94,9 +95,9 @@ export function ConstellationFlipPanel({
           <div className="flipFace flipFaceBack">
             <div className="flipFaceContent flipFaceContent-muse">
               <p className="eyebrow">{copy.result.museCardTitle}</p>
-              <h2 className="resultsTitle flipMuseTitle">{summaryTitle}</h2>
-              <p className="resultsStatement">{result.serendipity.line}</p>
-              <p className="helperText flipMuseText">{copy.result.museCardText}</p>
+              <p className="flipMuseKicker">{summaryTitle}</p>
+              <h2 className="resultsTitle flipMuseTitle">{result.serendipity.line}</h2>
+              <p className="resultsSummary flipMuseText">{summaryText}</p>
               <div className="museTagRow">
                 {museTags.map((tag) => (
                   <span className="reasonPill" key={tag}>

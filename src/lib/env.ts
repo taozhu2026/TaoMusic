@@ -4,6 +4,7 @@ export interface AppEnv {
   spotifyClientSecret?: string;
   openAiApiKey?: string;
   openAiModel: string;
+  openAiImageModel: string;
   openAiBaseUrl: string;
 }
 
@@ -18,6 +19,7 @@ export const env: AppEnv = {
   spotifyClientSecret: trimEnv(process.env.SPOTIFY_CLIENT_SECRET),
   openAiApiKey: trimEnv(process.env.OPENAI_API_KEY),
   openAiModel: trimEnv(process.env.OPENAI_MODEL) ?? 'gpt-4.1-mini',
+  openAiImageModel: trimEnv(process.env.OPENAI_IMAGE_MODEL) ?? 'gpt-image-1',
   openAiBaseUrl: trimEnv(process.env.OPENAI_BASE_URL) ?? 'https://api.openai.com/v1',
 };
 
