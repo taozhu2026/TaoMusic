@@ -24,6 +24,7 @@ const buildQueryPlan = (input: ReturnType<typeof mapContextToProfile>): QueryPla
     ...input.activityTags,
     ...input.moodTags,
     ...input.colorTags,
+    ...input.sceneTags,
     ...input.lyricalThemeTags,
   ];
 

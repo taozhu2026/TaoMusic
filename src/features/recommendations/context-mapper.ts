@@ -6,6 +6,7 @@ import {
   GENRE_ADJACENCY,
   GENRE_OPTIONS,
   MOOD_MAPPINGS,
+  SCENE_MAPPINGS,
   THEME_MAPPINGS,
 } from '@/src/config/mappings';
 import { pickBySeed } from '@/src/lib/random';
@@ -57,6 +58,9 @@ export const mapContextToProfile = (
   const themeMapping = normalizedInput.lyricalTheme
     ? THEME_MAPPINGS[normalizedInput.lyricalTheme]
     : undefined;
+  const sceneMapping = normalizedInput.scene
+    ? SCENE_MAPPINGS[normalizedInput.scene]
+    : undefined;
 
   const explicitGenres = normalizedInput.genre ? [normalizedInput.genre] : [];
   const adjacentGenres = normalizedInput.genre
@@ -73,6 +77,7 @@ export const mapContextToProfile = (
   const activityTags = activityMapping?.tags ?? [];
   const moodTags = moodMapping?.tags ?? [];
   const colorTags = colorMapping?.tags ?? [];
+  const sceneTags = sceneMapping?.tags ?? [];
   const lyricalThemeTags = uniqueStrings([
     ...(themeMapping?.tags ?? []),
     ...(normalizedInput.lyricalTheme ? [normalizedInput.lyricalTheme] : []),
@@ -82,9 +87,11 @@ export const mapContextToProfile = (
     ...activityTags,
     ...moodTags,
     ...colorTags,
+    ...sceneTags,
     ...lyricalThemeTags,
     ...genrePreference,
     ...(normalizedInput.country ? [normalizedInput.country] : []),
+    ...(normalizedInput.scene ? [normalizedInput.scene] : []),
   ]);
 
   return {
@@ -92,6 +99,7 @@ export const mapContextToProfile = (
     activityTags,
     moodTags,
     colorTags,
+    sceneTags,
     genrePreference,
     lyricalThemeTags,
     derivedTags,
@@ -103,6 +111,7 @@ export const mapContextToProfile = (
     tone: deriveTone([
       moodMapping?.tone,
       colorMapping?.tone,
+      sceneMapping?.tone,
       activityMapping?.tone,
       DEFAULT_TONE,
     ]),

@@ -1,13 +1,15 @@
-import type { RecommendationAction } from '@/src/features/recommendations/components/context-form';
 import {
   buildResultSummaryText,
   buildResultSummaryTitle,
 } from '@/src/features/recommendations/result-summary';
+import { MuseCardDock } from '@/src/features/recommendations/components/muse-card-dock';
 import { ResultCard } from '@/src/features/recommendations/components/result-card';
-import { ShareActions } from '@/src/features/recommendations/components/share-actions';
-import { ShareCardPreview } from '@/src/features/recommendations/components/share-card-preview';
 import { SignalSummary } from '@/src/features/recommendations/components/signal-summary';
 
+import type {
+  MuseCardState,
+  RecommendationAction,
+} from '@/src/features/recommendations/experience-types';
 import type { RecommendationResponse } from '@/src/features/recommendations/types';
 
 interface ResultsPanelProps {
@@ -15,6 +17,10 @@ interface ResultsPanelProps {
   error: string | null;
   isLoading: boolean;
   lastCompletedAction: RecommendationAction | null;
+  museCardState: MuseCardState;
+  onExpandMuseCard: () => void;
+  onMinimizeMuseCard: () => void;
+  onRevealMuseCard: () => void;
   result: RecommendationResponse | null;
 }
 
@@ -87,6 +93,10 @@ export function ResultsPanel({
   error,
   isLoading,
   lastCompletedAction,
+  museCardState,
+  onExpandMuseCard,
+  onMinimizeMuseCard,
+  onRevealMuseCard,
   result,
 }: ResultsPanelProps) {
   if (isLoading) {
@@ -111,14 +121,16 @@ export function ResultsPanel({
   const summaryText = buildResultSummaryText(result);
 
   return (
-    <section className="resultsPanel">
+    <section className="resultsPanel resultViewPanel">
       <div className="resultsHeader">
-        <div className="resultsIntro">
+        <div className="resultsHeroBand">
           <div className="resultsSummaryBlock">
             <p className="eyebrow">Current constellation</p>
             <h2 className="resultsTitle resultsTitleCompact">{summaryTitle}</h2>
             <p className="resultsSummary">{summaryText}</p>
+            <p className="resultsStatement">{result.serendipity.line}</p>
           </div>
+
           <div className="resultsLedger">
             <div className="ledgerItem">
               <span className="ledgerLabel">Source</span>
@@ -162,10 +174,6 @@ export function ResultsPanel({
         </div>
       </div>
 
-      <ShareCardPreview result={result} />
-      <ShareActions result={result} />
-      <SignalSummary title="Interpreted signal" values={result.contextProfile.raw} />
-
       <div className="cardsGrid">
         {result.recommendations.map((recommendation, index) => (
           <ResultCard
@@ -174,6 +182,17 @@ export function ResultsPanel({
             recommendation={recommendation}
           />
         ))}
+      </div>
+
+      <div className="resultsSupportRail">
+        <SignalSummary title="Interpreted signal" values={result.contextProfile.raw} />
+        <MuseCardDock
+          onExpand={onExpandMuseCard}
+          onMinimize={onMinimizeMuseCard}
+          onReveal={onRevealMuseCard}
+          result={result}
+          state={museCardState}
+        />
       </div>
     </section>
   );

@@ -15,6 +15,7 @@ export const recommendationInputSchema = z
     genre: optionalField,
     lyricalTheme: optionalField,
     mood: optionalField,
+    scene: optionalField,
     surprise: z.boolean().optional().default(false),
     rerollSeed: z.string().trim().max(120).optional(),
     excludeIds: z.array(z.string().trim().max(120)).max(12).optional(),
@@ -28,7 +29,8 @@ export const recommendationInputSchema = z
           value.country ||
           value.genre ||
           value.lyricalTheme ||
-          value.mood,
+          value.mood ||
+          value.scene,
       ),
     {
       message: 'Provide at least one signal or use surprise mode.',

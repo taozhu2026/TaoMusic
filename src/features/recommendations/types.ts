@@ -8,6 +8,7 @@ export interface RecommendationInput {
   genre?: string;
   lyricalTheme?: string;
   mood?: string;
+  scene?: string;
   surprise?: boolean;
   rerollSeed?: string;
   excludeIds?: string[];
@@ -18,6 +19,7 @@ export interface ContextProfile {
   activityTags: string[];
   moodTags: string[];
   colorTags: string[];
+  sceneTags: string[];
   genrePreference: string[];
   lyricalThemeTags: string[];
   derivedTags: string[];

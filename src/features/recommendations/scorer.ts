@@ -67,11 +67,15 @@ const buildMatchReasons = (
 
   if (
     overlapScore(
-      uniqueStrings([...profile.activityTags, ...profile.moodTags]),
+      uniqueStrings([...profile.activityTags, ...profile.moodTags, ...profile.sceneTags]),
       uniqueStrings([...candidate.moodTags, ...candidate.instrumentationTags]),
     ) > 0.15
   ) {
     reasons.push('mood matched');
+  }
+
+  if (overlapScore(profile.sceneTags, candidate.moodTags) > 0) {
+    reasons.push('scene aligned');
   }
 
   if (overlapScore(profile.lyricalThemeTags, candidate.lyricalThemeTags) > 0) {
@@ -98,7 +102,7 @@ export const scoreCandidates = (
     .map((candidate) => {
       const genreMatch = overlapScore(profile.genrePreference, candidate.genreTags);
       const activityMoodMatch = overlapScore(
-        uniqueStrings([...profile.activityTags, ...profile.moodTags]),
+        uniqueStrings([...profile.activityTags, ...profile.moodTags, ...profile.sceneTags]),
         uniqueStrings([...candidate.moodTags, ...candidate.instrumentationTags]),
       );
       const lyricalThemeMatch = overlapScore(

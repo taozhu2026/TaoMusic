@@ -5,7 +5,7 @@ import { hasLlmConfig, hasSpotifyConfig } from '@/src/lib/env';
 export async function GET(): Promise<NextResponse> {
   return NextResponse.json({
     ok: true,
-    version: '0.4.0',
+    version: '0.5.0',
     providers: {
       seedLibraryAvailable: true,
       spotifyConfigured: hasSpotifyConfig(),

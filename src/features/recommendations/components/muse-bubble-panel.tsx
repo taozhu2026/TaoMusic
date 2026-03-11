@@ -1,10 +1,14 @@
+import { motion } from 'framer-motion';
+
 import { Button } from '@/src/components/ui/button';
 import { SignalSummary } from '@/src/features/recommendations/components/signal-summary';
-import type { RecommendationAction } from '@/src/features/recommendations/components/context-form';
 import type {
   BubbleFocus,
   MuseBubble,
 } from '@/src/features/recommendations/bubbles/types';
+import type {
+  RecommendationAction,
+} from '@/src/features/recommendations/experience-types';
 import type { RecommendationInput } from '@/src/features/recommendations/types';
 
 const FOCUS_OPTIONS: Array<{ label: string; value: BubbleFocus }> = [
@@ -28,6 +32,7 @@ interface MuseBubblePanelProps {
   onRefreshDeck: () => void;
   onReroll: () => void;
   onSetFocus: (focus: BubbleFocus) => void;
+  onSpark: () => void;
   onSurprise: () => void;
   onToggleBubble: (bubbleId: string) => void;
   selectedBubbles: MuseBubble[];
@@ -46,6 +51,7 @@ export function MuseBubblePanel({
   onRefreshDeck,
   onReroll,
   onSetFocus,
+  onSpark,
   onSurprise,
   onToggleBubble,
   selectedBubbles,
@@ -85,15 +91,58 @@ export function MuseBubblePanel({
       </div>
 
       <div className="bubbleDeck">
-        {deck.map((bubble) => (
-          <article
+        {deck.map((bubble, index) => {
+          const isSelected = selectedIds.has(bubble.id);
+
+          return (
+          <motion.article
+            animate={
+              isLoading
+                ? isSelected
+                  ? {
+                      opacity: 1,
+                      scale: 0.98,
+                      x: (index - deck.length / 2) * -4,
+                      y: -10,
+                    }
+                  : {
+                      opacity: 0.34,
+                      scale: 0.94,
+                      y: 10,
+                    }
+                : {
+                    opacity: 1,
+                    scale: isSelected ? 1.03 : 1,
+                    y: [0, index % 2 === 0 ? -4 : 4, 0],
+                  }
+            }
             className={[
               'bubbleCard',
-              selectedIds.has(bubble.id) ? 'bubbleCard-selected' : '',
+              `bubbleCard-${bubble.size}`,
+              `bubbleCardFamily-${bubble.family}`,
+              isSelected ? 'bubbleCard-selected' : '',
             ]
               .filter(Boolean)
               .join(' ')}
             key={bubble.id}
+            transition={
+              isLoading
+                ? { duration: 0.24, ease: 'easeOut' }
+                : {
+                    duration: 5.6 + index * 0.2,
+                    ease: 'easeInOut',
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatType: 'mirror',
+                  }
+            }
+            whileHover={
+              isLoading
+                ? undefined
+                : {
+                    scale: isSelected ? 1.05 : 1.04,
+                    y: -8,
+                  }
+            }
           >
             <button
               className="bubbleCardMain"
@@ -111,8 +160,9 @@ export function MuseBubblePanel({
             >
               ×
             </button>
-          </article>
-        ))}
+          </motion.article>
+          );
+        })}
       </div>
 
       <div className="bubbleSelectionPanel">
@@ -142,6 +192,9 @@ export function MuseBubblePanel({
       <div className="actionsRow">
         <Button disabled={!canGenerate || isLoading} onClick={onGenerate} type="button">
           {activeAction === 'generate' ? 'Composing...' : 'Generate from bubbles'}
+        </Button>
+        <Button disabled={isLoading} onClick={onSpark} type="button" variant="secondary">
+          Spark
         </Button>
         <Button disabled={isLoading} onClick={onRefreshDeck} type="button" variant="secondary">
           Refresh set

@@ -1,6 +1,16 @@
 # Changelog
 
-## 0.4.0 - Unreleased
+## 0.5.0 - Unreleased
+
+- Refactored the app into a state-driven two-stage flow with `home_input`, `generating`, `result_view`, and `tuning`
+- Added result-state compact header behavior, floating controls, and quick tune modifiers
+- Implemented Muse Card reveal, minimize, and reopen interactions in the result screen
+- Upgraded structured inputs to chip-based controls with Spark support
+- Strengthened Muse Bubble Mode with animated bubble interactions, Spark selection, and expanded vocabulary coverage
+- Added `scene` as a first-class input signal and expanded region, mood, genre, and scene mappings
+- Added Framer Motion for screen transitions, bubble motion, and Muse Card panel animation
+
+## 0.4.0 - 2026-03-11
 
 - Refined the hero hierarchy with calmer typography and a more consistent intro label treatment
 - Stabilized the muse/share card density and proportions across common laptop and desktop widths

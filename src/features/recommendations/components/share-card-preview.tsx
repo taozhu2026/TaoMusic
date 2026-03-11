@@ -15,6 +15,7 @@ const buildSignalTags = (result: RecommendationResponse): string[] => {
     raw.color,
     raw.country,
     raw.genre,
+    raw.scene,
     raw.lyricalTheme,
   ]
     .filter(Boolean)

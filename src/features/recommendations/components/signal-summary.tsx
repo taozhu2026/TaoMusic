@@ -9,8 +9,9 @@ const FIELD_LABELS: Array<{ key: keyof RecommendationInput; label: string }> = [
   { key: 'activity', label: 'Activity' },
   { key: 'mood', label: 'Mood' },
   { key: 'color', label: 'Color' },
-  { key: 'country', label: 'Country' },
+  { key: 'country', label: 'Region / culture' },
   { key: 'genre', label: 'Genre' },
+  { key: 'scene', label: 'Scene' },
   { key: 'lyricalTheme', label: 'Theme' },
 ];
 

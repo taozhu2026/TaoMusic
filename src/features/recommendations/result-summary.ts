@@ -9,7 +9,8 @@ type SignalInputKey =
   | 'country'
   | 'genre'
   | 'lyricalTheme'
-  | 'mood';
+  | 'mood'
+  | 'scene';
 
 const formatSignalValue = (value?: string): string | null => {
   if (!value) {
@@ -48,6 +49,7 @@ export const buildResultSummaryText = (result: RecommendationResponse): string =
   const secondarySignals = collectSignalValues(result.contextProfile.raw, [
     'country',
     'genre',
+    'scene',
     'lyricalTheme',
   ]);
   const lead = `${count} pick${count === 1 ? '' : 's'} shaped around a ${tone} register`;

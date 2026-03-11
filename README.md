@@ -1,8 +1,8 @@
-# TaoMusic v0.4
+# TaoMusic v0.5
 
 TaoMusic is a lightweight AI-assisted web app for contextual music discovery and creative inspiration. Users provide a few human signals such as activity, mood, color, country, genre, or lyrical theme, and the app returns a small set of music suggestions plus a compact serendipity line.
 
-v0.4 is a refinement pass on top of the current product. It keeps the existing recommendation system intact, calms the interface hierarchy, improves responsive behavior, and documents the safest product path for the next major interaction mode: Muse Bubble Mode.
+v0.5 turns the product into a state-driven two-stage experience. The core recommendation system stays intact, but the interface now separates home input from result viewing, adds a compact result screen with floating controls, and fully implements Muse Bubble Mode as a first-class input path.
 
 ## Product Description
 
@@ -20,21 +20,31 @@ It is an `AI music muse`:
 - explainable in how it maps context to music
 - resilient when external APIs are unavailable
 
-## What Changed in v0.4
+## What Changed in v0.5
 
-- Refined the hero hierarchy so the top of the page feels calmer and more unified
-- Tightened muse/share card proportions and internal spacing across common laptop and desktop widths
-- Improved overall layout stability with more controlled column balance and breakpoint behavior
-- Kept the lower muse card as the single expressive focal point in the result area
-- Added a formal Muse Bubble Mode product and engineering plan in [`docs/muse-bubble-mode-plan.md`](docs/muse-bubble-mode-plan.md)
-- Preserved the current recommendation pipeline, fallback behavior, and deployability
+- Refactored the page into explicit `home_input`, `generating`, `result_view`, and `tuning` states
+- Added a compact result-state header with automatic mode-switch regeneration
+- Added a floating control panel with `Reroll`, `Tune`, and `Back to home`
+- Added quick tune modifiers for warmer, nocturnal, focused, and more surprising variations
+- Added Muse Card reveal, minimize, and reopen behavior instead of showing the card fully by default
+- Upgraded structured inputs to stronger chip-based controls
+- Expanded Muse Bubble Mode with animated tactile bubbles, Spark selection, and stronger selection feedback
+- Expanded the vocabulary for regions/cultures, moods, genres, and scenes
+- Added `scene` as a new recommendation input signal
+- Added Framer Motion transitions across screen states and result interactions
 
 ## Current Features
 
 ### Fully implemented
 
 - Single-page web experience with editorial UI
-- Context form for `activity`, `mood`, `color`, `country`, `genre`, and `lyrical theme`
+- State-driven two-stage flow for input, generation, result view, and tuning
+- Context form for `activity`, `mood`, `color`, `country`, `genre`, `scene`, and `lyrical theme`
+- Chip-style structured controls with Spark seeding
+- Muse Bubble Mode with animated bubble selection, focus presets, Spark, refresh, reroll, and surprise flows
+- Automatic mode-switch regeneration while in the result view
+- Floating result controls and quick tuning modifiers
+- Reveal/minimize/reopen Muse Card flow
 - Preset moods for quick exploration
 - Recommendation API endpoint at `POST /api/recommend`
 - Deterministic recommendation pipeline:
@@ -48,7 +58,7 @@ It is an `AI music muse`:
 - Surprise flow that injects one additional signal
 - Clipboard-based text sharing
 - Screenshot-friendly share-card panel
-- Calm, more stable responsive UI refinement across hero and result surfaces
+- Motion-enhanced, atmospheric responsive UI across home and result surfaces
 - Health endpoint at `GET /api/health`
 - Production build verified with `npm run build`
 - Type safety verified with `npm run typecheck`
@@ -184,7 +194,6 @@ src/
 
 ## Deferred for Future Versions
 
-- Muse Bubble Mode implementation
 - Last.fm or multi-provider enrichment
 - Richer metadata fusion and better region/theme inference
 - Export-to-image or downloadable share assets
@@ -194,7 +203,7 @@ src/
 
 ## Notes
 
-- Muse Bubble Mode is planned in [`docs/muse-bubble-mode-plan.md`](docs/muse-bubble-mode-plan.md) but not yet implemented in the product
+- The earlier Muse Bubble Mode planning document remains in [`docs/muse-bubble-mode-plan.md`](docs/muse-bubble-mode-plan.md)
 - The selected v0.2 identity direction is documented in [`docs/brand-directions.md`](docs/brand-directions.md)
 - The original ideation brief is archived in [`docs/planning-brief.md`](docs/planning-brief.md)
 - The repository includes an MIT [`LICENSE`](LICENSE)

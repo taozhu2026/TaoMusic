@@ -5,21 +5,22 @@ import {
   GENRE_OPTIONS,
   LYRICAL_THEME_OPTIONS,
   MOOD_OPTIONS,
+  SCENE_OPTIONS,
 } from '@/src/config/mappings';
 import { Button } from '@/src/components/ui/button';
-import { SelectField } from '@/src/components/ui/select-field';
+import { OptionChipField } from '@/src/components/ui/option-chip-field';
 import {
   PresetStrip,
   type RecommendationPreset,
 } from '@/src/features/recommendations/components/preset-strip';
 import { SignalSummary } from '@/src/features/recommendations/components/signal-summary';
 
+import type { RecommendationAction } from '@/src/features/recommendations/experience-types';
 import type { RecommendationInput } from '@/src/features/recommendations/types';
-
-export type RecommendationAction = 'generate' | 'reroll' | 'surprise';
 
 interface ContextFormProps {
   activeAction: RecommendationAction | null;
+  canGenerate: boolean;
   canReroll: boolean;
   isLoading: boolean;
   onApplyPreset: (preset: RecommendationPreset) => void;
@@ -27,6 +28,7 @@ interface ContextFormProps {
   onChange: (field: keyof RecommendationInput, value: string) => void;
   onGenerate: () => void;
   onReroll: () => void;
+  onSpark: () => void;
   onSurprise: () => void;
 }
 
@@ -74,6 +76,7 @@ const PRESETS: RecommendationPreset[] = [
 
 export function ContextForm({
   activeAction,
+  canGenerate,
   canReroll,
   isLoading,
   onApplyPreset,
@@ -81,6 +84,7 @@ export function ContextForm({
   onChange,
   onGenerate,
   onReroll,
+  onSpark,
   onSurprise,
 }: ContextFormProps) {
   return (
@@ -115,67 +119,77 @@ export function ContextForm({
 
       <div className="formPanel">
         <div className="fieldGrid">
-          <SelectField
+          <OptionChipField
             hint="The verb"
             index="01"
             label="Activity"
             options={ACTIVITY_OPTIONS}
-            placeholder="What are you doing?"
             value={values.activity ?? ''}
             onChange={(value) => onChange('activity', value)}
           />
-          <SelectField
+          <OptionChipField
             hint="The weather"
             index="02"
             label="Mood"
             options={MOOD_OPTIONS}
-            placeholder="What is the emotional weather?"
             value={values.mood ?? ''}
             onChange={(value) => onChange('mood', value)}
           />
-          <SelectField
+          <OptionChipField
             hint="The tint"
             index="03"
             label="Color"
             options={COLOR_OPTIONS}
-            placeholder="Choose a color aura"
             value={values.color ?? ''}
             onChange={(value) => onChange('color', value)}
           />
-          <SelectField
-            hint="The place"
+          <OptionChipField
+            hint="The region"
             index="04"
-            label="Country"
+            label="Region / culture"
             options={COUNTRY_OPTIONS}
-            placeholder="Where should the music lean?"
             value={values.country ?? ''}
             onChange={(value) => onChange('country', value)}
           />
-          <SelectField
+          <OptionChipField
             hint="The frame"
             index="05"
             label="Genre"
             options={GENRE_OPTIONS}
-            placeholder="Pick a stylistic anchor"
             value={values.genre ?? ''}
             onChange={(value) => onChange('genre', value)}
           />
-          <SelectField
-            hint="The echo"
+          <OptionChipField
+            hint="The setting"
             index="06"
+            label="Scene"
+            options={SCENE_OPTIONS}
+            value={values.scene ?? ''}
+            onChange={(value) => onChange('scene', value)}
+          />
+          <OptionChipField
+            hint="The echo"
+            index="07"
             label="Theme"
             options={LYRICAL_THEME_OPTIONS}
-            placeholder="What should it echo?"
             value={values.lyricalTheme ?? ''}
             onChange={(value) => onChange('lyricalTheme', value)}
           />
         </div>
 
         <div className="actionsRow">
-          <Button disabled={isLoading} onClick={onGenerate} type="button">
+          <Button disabled={!canGenerate || isLoading} onClick={onGenerate} type="button">
             {activeAction === 'generate' ? 'Composing...' : 'Generate'}
           </Button>
-          <Button disabled={isLoading} onClick={onSurprise} type="button" variant="secondary">
+          <Button disabled={isLoading} onClick={onSpark} type="button" variant="secondary">
+            Spark
+          </Button>
+          <Button
+            disabled={!canGenerate || isLoading}
+            onClick={onSurprise}
+            type="button"
+            variant="secondary"
+          >
             {activeAction === 'surprise' ? 'Detouring...' : 'Add surprise'}
           </Button>
           <Button
@@ -189,8 +203,8 @@ export function ContextForm({
         </div>
 
         <p className="helperText">
-          One to three signals usually works best. Narrow inputs stay coherent; looser
-          inputs drift into more serendipitous territory.
+          One to four signals usually works best. Spark can seed a coherent set when you
+          want a fast starting point without filling every category.
         </p>
       </div>
     </section>
