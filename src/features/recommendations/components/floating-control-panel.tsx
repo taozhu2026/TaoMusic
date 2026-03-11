@@ -45,6 +45,7 @@ export function FloatingControlPanel({
     >
       <div className="floatingControlActions">
         <Button
+          className="floatingControlButton"
           disabled={!canReroll || isLoading}
           onClick={onReroll}
           type="button"
@@ -52,10 +53,22 @@ export function FloatingControlPanel({
         >
           {activeAction === 'reroll' ? 'Rerolling...' : 'Reroll'}
         </Button>
-        <Button disabled={isLoading} onClick={onToggleTune} type="button" variant="secondary">
+        <Button
+          className="floatingControlButton"
+          disabled={isLoading}
+          onClick={onToggleTune}
+          type="button"
+          variant="secondary"
+        >
           {viewState === 'tuning' ? 'Close tune' : 'Tune'}
         </Button>
-        <Button disabled={isLoading} onClick={onBackHome} type="button" variant="ghost">
+        <Button
+          className="floatingControlButton"
+          disabled={isLoading}
+          onClick={onBackHome}
+          type="button"
+          variant="ghost"
+        >
           Back to home
         </Button>
       </div>

@@ -8,7 +8,7 @@ import {
   SCENE_OPTIONS,
 } from '@/src/config/mappings';
 import { Button } from '@/src/components/ui/button';
-import { OptionChipField } from '@/src/components/ui/option-chip-field';
+import { SelectField } from '@/src/components/ui/select-field';
 import {
   PresetStrip,
   type RecommendationPreset,
@@ -109,7 +109,7 @@ export function ContextForm({
           <p className="manifestoLabel">How it thinks</p>
           <p className="manifestoText">
             Activity anchors the search. Mood and genre tune the emotional register.
-            Color bends the atmosphere. Country adds a scenic detour.
+            Color bends the atmosphere. Region adds a scenic detour.
           </p>
         </div>
         <SignalSummary title="Pinned signal" values={values} />
@@ -119,59 +119,66 @@ export function ContextForm({
 
       <div className="formPanel">
         <div className="fieldGrid">
-          <OptionChipField
+          <SelectField
             hint="The verb"
             index="01"
             label="Activity"
             options={ACTIVITY_OPTIONS}
+            placeholder="Select activity"
             value={values.activity ?? ''}
             onChange={(value) => onChange('activity', value)}
           />
-          <OptionChipField
+          <SelectField
             hint="The weather"
             index="02"
             label="Mood"
             options={MOOD_OPTIONS}
+            placeholder="Select mood"
             value={values.mood ?? ''}
             onChange={(value) => onChange('mood', value)}
           />
-          <OptionChipField
+          <SelectField
             hint="The tint"
             index="03"
             label="Color"
             options={COLOR_OPTIONS}
+            placeholder="Select color"
             value={values.color ?? ''}
             onChange={(value) => onChange('color', value)}
           />
-          <OptionChipField
+          <SelectField
             hint="The region"
             index="04"
             label="Region / culture"
             options={COUNTRY_OPTIONS}
+            placeholder="Select region / culture"
             value={values.country ?? ''}
             onChange={(value) => onChange('country', value)}
           />
-          <OptionChipField
+          <SelectField
             hint="The frame"
             index="05"
             label="Genre"
             options={GENRE_OPTIONS}
+            placeholder="Select genre"
             value={values.genre ?? ''}
             onChange={(value) => onChange('genre', value)}
           />
-          <OptionChipField
+          <SelectField
             hint="The setting"
             index="06"
             label="Scene"
             options={SCENE_OPTIONS}
+            placeholder="Select scene"
             value={values.scene ?? ''}
             onChange={(value) => onChange('scene', value)}
           />
-          <OptionChipField
+          <SelectField
             hint="The echo"
             index="07"
             label="Theme"
             options={LYRICAL_THEME_OPTIONS}
+            placeholder="Select theme"
             value={values.lyricalTheme ?? ''}
             onChange={(value) => onChange('lyricalTheme', value)}
           />

@@ -519,22 +519,24 @@ export function RecommendationExperience() {
               onRevealMuseCard={() => setMuseCardState('expanded')}
               result={deferredResult}
             />
-            <FloatingControlPanel
-              activeAction={activeAction}
-              canReroll={Boolean(result?.recommendations.length)}
-              isLoading={isLoading}
-              onBackHome={handleBackHome}
-              onReroll={() =>
-                requestRecommendation({ action: 'reroll', excludeIds: recentIds })
-              }
-              onToggleTune={() =>
-                setViewState((current) =>
-                  current === 'tuning' ? 'result_view' : 'tuning',
-                )
-              }
-              onTuneModifier={handleTuneModifier}
-              viewState={viewState}
-            />
+            {viewState !== 'generating' ? (
+              <FloatingControlPanel
+                activeAction={activeAction}
+                canReroll={Boolean(result?.recommendations.length)}
+                isLoading={isLoading}
+                onBackHome={handleBackHome}
+                onReroll={() =>
+                  requestRecommendation({ action: 'reroll', excludeIds: recentIds })
+                }
+                onToggleTune={() =>
+                  setViewState((current) =>
+                    current === 'tuning' ? 'result_view' : 'tuning',
+                  )
+                }
+                onTuneModifier={handleTuneModifier}
+                viewState={viewState}
+              />
+            ) : null}
           </motion.section>
         )}
       </AnimatePresence>
