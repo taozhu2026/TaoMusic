@@ -201,6 +201,12 @@ body::after {
   min-width: 0;
 }
 
+.inputColumn {
+  display: grid;
+  gap: 0.95rem;
+  align-content: start;
+}
+
 .heroPanel,
 .resultsPanel {
   position: relative;
@@ -297,7 +303,7 @@ body::after {
 
 .heroTitleLineSoft {
   max-width: 10.5ch;
-  color: rgba(38, 23, 12, 0.72);
+  color: inherit;
 }
 
 .heroText,
@@ -537,6 +543,171 @@ body::after {
 .button-ghost {
   background: transparent;
   color: var(--text-muted);
+}
+
+.modeSwitch {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+  border: 1px solid rgba(38, 23, 12, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 249, 241, 0.7);
+  padding: 0.35rem;
+}
+
+.modeSwitchButton {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  padding: 0.75rem 1rem;
+  color: var(--text-muted);
+  font-family: var(--label-font);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.modeSwitchButton-active {
+  background: rgba(255, 252, 247, 0.94);
+  color: var(--text);
+  box-shadow: 0 10px 22px rgba(73, 44, 17, 0.08);
+}
+
+.bubblePanel {
+  gap: 1.05rem;
+}
+
+.bubbleHeroTitle {
+  max-width: 11ch;
+  font-size: clamp(2rem, 3.2vw, 3rem);
+}
+
+.bubbleFocusStrip,
+.bubbleSelectionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.bubbleFocusChip,
+.selectedBubblePill {
+  border: 1px solid rgba(58, 43, 27, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 251, 246, 0.88);
+  padding: 0.5rem 0.85rem;
+  color: var(--text-muted);
+  font-family: var(--label-font);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  cursor: pointer;
+}
+
+.bubbleFocusChip-active,
+.selectedBubblePill {
+  color: var(--text);
+}
+
+.bubbleFocusChip-active {
+  border-color: rgba(181, 97, 42, 0.2);
+  background: rgba(233, 183, 122, 0.18);
+}
+
+.bubbleDeck {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.bubbleCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.7rem;
+  align-items: start;
+  border: 1px solid rgba(38, 23, 12, 0.1);
+  border-radius: 22px;
+  background: rgba(255, 252, 247, 0.78);
+  padding: 0.9rem;
+  transition:
+    border-color 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.bubbleCard:hover {
+  transform: translateY(-1px);
+  border-color: rgba(181, 97, 42, 0.2);
+  box-shadow: 0 18px 34px rgba(73, 44, 17, 0.08);
+}
+
+.bubbleCard-selected {
+  border-color: rgba(181, 97, 42, 0.28);
+  background: linear-gradient(180deg, rgba(255, 251, 245, 0.98), rgba(247, 236, 220, 0.82));
+}
+
+.bubbleCardMain,
+.bubbleDismiss {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.bubbleCardMain {
+  display: grid;
+  gap: 0.3rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.bubbleCardLabel {
+  font-family: var(--display-font);
+  font-size: 1.2rem;
+  line-height: 1;
+  text-transform: lowercase;
+}
+
+.bubbleCardNote {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.bubbleDismiss {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.bubbleDismiss:hover {
+  background: rgba(38, 23, 12, 0.06);
+  color: var(--text);
+}
+
+.bubbleSelectionPanel {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.bubbleSelectionHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.bubbleSelectionCount {
+  color: var(--text-muted);
+  font-family: var(--label-font);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
 }
 
 .resultsPanel {
@@ -974,7 +1145,8 @@ body::after {
   .topBanner,
   .museManifesto,
   .resultsIntro,
-  .presetStripCopy {
+  .presetStripCopy,
+  .bubbleSelectionHeader {
     grid-template-columns: 1fr;
     flex-direction: column;
     align-items: flex-start;
@@ -989,6 +1161,10 @@ body::after {
   }
 
   .presetRail {
+    grid-template-columns: 1fr;
+  }
+
+  .bubbleDeck {
     grid-template-columns: 1fr;
   }
 
@@ -1016,6 +1192,10 @@ body::after {
   }
 
   .button {
+    width: 100%;
+  }
+
+  .modeSwitch {
     width: 100%;
   }
 
