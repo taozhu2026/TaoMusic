@@ -1,4 +1,3 @@
-import { Button } from '@/src/components/ui/button';
 import { localizeText } from '@/src/config/mappings';
 
 import type { UiLanguage } from '@/src/i18n/types';
@@ -18,7 +17,6 @@ interface PresetStripProps {
   presets: RecommendationPreset[];
   title: string;
   text: string;
-  useFirstLabel: string;
 }
 
 export function PresetStrip({
@@ -27,7 +25,6 @@ export function PresetStrip({
   presets,
   text,
   title,
-  useFirstLabel,
 }: PresetStripProps) {
   return (
     <div className="presetStrip">
@@ -48,12 +45,6 @@ export function PresetStrip({
             <span className="presetNote">{localizeText(preset.note, language)}</span>
           </button>
         ))}
-      </div>
-
-      <div className="presetActions">
-        <Button onClick={() => onSelect(presets[0])} type="button" variant="ghost">
-          {useFirstLabel}
-        </Button>
       </div>
     </div>
   );

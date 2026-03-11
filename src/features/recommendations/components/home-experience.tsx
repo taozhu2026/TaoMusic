@@ -1,11 +1,9 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { TaoMusicLockup } from '@/src/brand/taomusic-logo';
-import { Button } from '@/src/components/ui/button';
 import { createStableId } from '@/src/lib/id';
 import { getUiCopy } from '@/src/i18n/copy';
 import { usePreferences } from '@/src/providers/preferences-provider';
@@ -16,15 +14,19 @@ import {
   getSelectedBubbles,
 } from '@/src/features/recommendations/bubbles/engine';
 import { createBubbleDraft } from '@/src/features/recommendations/bubbles/drafts';
-import { ContextForm } from '@/src/features/recommendations/components/context-form';
+import {
+  ContextForm,
+  STRUCTURED_PRESETS,
+} from '@/src/features/recommendations/components/context-form';
 import { ModeSwitch } from '@/src/features/recommendations/components/mode-switch';
 import { MuseBubblePanel } from '@/src/features/recommendations/components/muse-bubble-panel';
-import { SettingsPanel } from '@/src/features/recommendations/components/settings-panel';
+import { PreferenceToggles } from '@/src/features/recommendations/components/preference-toggles';
+import { PresetStrip } from '@/src/features/recommendations/components/preset-strip';
 import {
   loadHomeDrafts,
   saveHomeDrafts,
 } from '@/src/features/recommendations/home-drafts';
-import { buildStructuredSparkInput, hasUsableSignal } from '@/src/features/recommendations/spark';
+import { hasUsableSignal } from '@/src/features/recommendations/spark';
 
 import type {
   BubbleDraft,
@@ -56,7 +58,6 @@ export function HomeExperience() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeAction, setActiveAction] = useState<RecommendationAction | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const [draftsReady, setDraftsReady] = useState(false);
 
   useEffect(() => {
@@ -173,11 +174,6 @@ export function HomeExperience() {
     setError(null);
   };
 
-  const handleStructuredSpark = () => {
-    setStructuredDraft(buildStructuredSparkInput(createStableId(), structuredDraft));
-    setError(null);
-  };
-
   const handleBubbleSpark = () => {
     const seed = createStableId();
     const selectedIds = buildBubbleSparkSelection({
@@ -233,26 +229,9 @@ export function HomeExperience() {
         <TaoMusicLockup subtitle={copy.brandSubtitle} />
         <div className="topBannerActions">
           <ModeSwitch disabled={isLoading} language={language} mode={mode} onChange={setMode} />
-          <Button
-            onClick={() => setSettingsOpen((current) => !current)}
-            type="button"
-            variant="secondary"
-          >
-            {settingsOpen ? copy.common.closeSettings : copy.common.settings}
-          </Button>
+          <PreferenceToggles />
         </div>
       </header>
-
-      {settingsOpen ? (
-        <motion.section
-          animate={{ opacity: 1, y: 0 }}
-          className="settingsDock"
-          initial={{ opacity: 0, y: -12 }}
-          transition={{ duration: 0.24, ease: 'easeOut' }}
-        >
-          <SettingsPanel />
-        </motion.section>
-      ) : null}
 
       <div className="homeLayout">
         <div className="inputColumn">
@@ -260,15 +239,11 @@ export function HomeExperience() {
             <ContextForm
               activeAction={activeAction}
               canGenerate={canGenerateStructured}
-              canReroll={false}
               isLoading={isLoading}
               language={language}
-              onApplyPreset={handlePreset}
               values={structuredDraft}
               onChange={handleStructuredChange}
               onGenerate={() => void submitRecommendation({ action: 'generate' })}
-              onReroll={() => undefined}
-              onSpark={handleStructuredSpark}
               onSurprise={() => void submitRecommendation({ action: 'surprise', surprise: true })}
             />
           ) : (
@@ -324,6 +299,14 @@ export function HomeExperience() {
               ))}
             </div>
           </div>
+
+          <PresetStrip
+            language={language}
+            onSelect={handlePreset}
+            presets={STRUCTURED_PRESETS}
+            text={copy.home.startingPointText}
+            title={copy.home.startingPoints}
+          />
         </aside>
       </div>
     </div>

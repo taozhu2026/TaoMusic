@@ -58,30 +58,16 @@ export function ConstellationFlipPanel({
   const summaryTitle = buildResultSummaryTitle(result, language);
   const summaryText = buildResultSummaryText(result, language);
   const museTags = buildMuseTags(result, language);
+  const nextFace = face === 'constellation' ? 'muse' : 'constellation';
+  const toggleLabel =
+    face === 'constellation' ? copy.result.turnMuse : copy.result.turnConstellation;
 
   return (
     <section className="flipPanel">
       <div className="flipPanelHeader">
-        <div>
-          <p className="eyebrow">{copy.result.currentConstellation}</p>
-          <h2 className="resultsTitle">{summaryTitle}</h2>
-        </div>
-        <div className="flipPanelToggle">
-          <button
-            className={face === 'constellation' ? 'flipToggleActive' : ''}
-            onClick={() => onChangeFace('constellation')}
-            type="button"
-          >
-            {copy.result.turnConstellation}
-          </button>
-          <button
-            className={face === 'muse' ? 'flipToggleActive' : ''}
-            onClick={() => onChangeFace('muse')}
-            type="button"
-          >
-            {copy.result.turnMuse}
-          </button>
-        </div>
+        <button className="flipSingleToggle" onClick={() => onChangeFace(nextFace)} type="button">
+          {toggleLabel}
+        </button>
       </div>
 
       <div className="flipPanelViewport">
@@ -91,26 +77,33 @@ export function ConstellationFlipPanel({
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="flipFace flipFaceFront">
-            <p className="resultsSummary">{summaryText}</p>
-            <p className="resultsStatement">{result.serendipity.line}</p>
-            <SignalSummary
-              emptyText={copy.common.noSignal}
-              language={language}
-              title={copy.result.resultSummaryLabel}
-              values={result.contextProfile.raw}
-            />
+            <div className="flipFaceContent">
+              <p className="eyebrow">{copy.result.currentConstellation}</p>
+              <h2 className="resultsTitle flipPanelTitle">{summaryTitle}</h2>
+              <p className="resultsStatement">{result.serendipity.line}</p>
+              <p className="resultsSummary">{summaryText}</p>
+              <SignalSummary
+                emptyText={copy.common.noSignal}
+                language={language}
+                title={copy.result.resultSummaryLabel}
+                values={result.contextProfile.raw}
+              />
+            </div>
           </div>
 
           <div className="flipFace flipFaceBack">
-            <p className="manifestoLabel">{copy.result.museCardTitle}</p>
-            <p className="resultsStatement">{result.serendipity.line}</p>
-            <p className="helperText">{copy.result.museCardText}</p>
-            <div className="museTagRow">
-              {museTags.map((tag) => (
-                <span className="reasonPill" key={tag}>
-                  {tag.replace(/-/g, ' ')}
-                </span>
-              ))}
+            <div className="flipFaceContent flipFaceContent-muse">
+              <p className="eyebrow">{copy.result.museCardTitle}</p>
+              <h2 className="resultsTitle flipMuseTitle">{summaryTitle}</h2>
+              <p className="resultsStatement">{result.serendipity.line}</p>
+              <p className="helperText flipMuseText">{copy.result.museCardText}</p>
+              <div className="museTagRow">
+                {museTags.map((tag) => (
+                  <span className="reasonPill" key={tag}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </motion.div>

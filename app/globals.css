@@ -118,6 +118,64 @@ textarea {
   justify-content: flex-end;
 }
 
+.preferenceToggleRow,
+.languageToggle {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.languageToggle {
+  padding: 0.28rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.languageToggleButton,
+.themeCycleButton,
+.flipSingleToggle {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.languageToggleButton {
+  border-color: transparent;
+  padding: 0.52rem 0.7rem;
+  font-family: var(--label-font);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+}
+
+.languageToggleButton-active {
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface-strong));
+  color: var(--text);
+}
+
+.themeCycleButton {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.56rem 0.82rem;
+}
+
+.themeCycleIcon {
+  color: var(--accent);
+  font-size: 0.92rem;
+}
+
+.themeCycleLabel {
+  font-size: 0.82rem;
+}
+
 .brandMark {
   display: flex;
   gap: 0.85rem;
@@ -217,11 +275,8 @@ textarea {
   color: var(--text);
 }
 
-.settingsDock,
 .heroPanel,
 .supportPanelCard,
-.settingsPanel,
-.resultControlCluster,
 .flipPanel,
 .resultRouteRight,
 .resultStatePanel {
@@ -230,10 +285,6 @@ textarea {
   background: var(--surface);
   box-shadow: var(--shadow);
   backdrop-filter: blur(18px);
-}
-
-.settingsDock {
-  padding: 0.75rem;
 }
 
 .homeLayout {
@@ -255,8 +306,7 @@ textarea {
 
 .supportPanelCard,
 .heroPanel,
-.resultStatePanel,
-.settingsPanel {
+.resultStatePanel {
   padding: clamp(1.2rem, 2vw, 1.6rem);
 }
 
@@ -397,14 +447,16 @@ textarea {
 .presetRail {
   display: grid;
   gap: 0.75rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
 }
 
 .presetCard,
 .bubbleFocusChip,
 .field,
 .bubbleCard,
-.flipPanelToggle button {
+.flipSingleToggle,
+.themeCycleButton,
+.languageToggleButton {
   transition:
     background 200ms ease,
     border-color 200ms ease,
@@ -426,9 +478,10 @@ textarea {
 
 .presetCard:hover,
 .bubbleFocusChip:hover,
-.floatingTuneChip:hover,
 .selectedBubblePill:hover,
-.flipPanelToggle button:hover {
+.flipSingleToggle:hover,
+.themeCycleButton:hover,
+.languageToggleButton:hover {
   transform: translateY(-1px);
 }
 
@@ -502,8 +555,6 @@ textarea {
 }
 
 .actionsRow,
-.presetActions,
-.resultControlButtons,
 .settingsOptionRow {
   display: flex;
   flex-wrap: wrap;
@@ -573,16 +624,13 @@ textarea {
 
 .bubbleFocusStrip,
 .bubbleSelectionRow,
-.museTagRow,
-.resultControlChipRow {
+.museTagRow {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
 }
 
-.bubbleFocusChip,
-.floatingTuneChip,
-.flipPanelToggle button {
+.bubbleFocusChip {
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--surface-strong);
@@ -663,8 +711,7 @@ textarea {
 }
 
 .bubbleSelectionPanel,
-.signalSummary,
-.resultControlDrawer {
+.signalSummary {
   display: grid;
   gap: 0.8rem;
   padding: 1rem;
@@ -709,16 +756,6 @@ textarea {
   color: var(--text-muted);
 }
 
-.settingsPanel {
-  display: grid;
-  gap: 1rem;
-}
-
-.settingsGroup {
-  display: grid;
-  gap: 0.65rem;
-}
-
 .resultScene {
   gap: 1rem;
 }
@@ -729,10 +766,11 @@ textarea {
 }
 
 .resultControlCluster {
-  display: grid;
-  gap: 0.8rem;
-  min-width: min(28rem, 100%);
-  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .resultStatePanel {
@@ -754,6 +792,7 @@ textarea {
 .resultRouteLeft,
 .resultRouteRight {
   min-width: 0;
+  display: flex;
 }
 
 .resultRouteRight,
@@ -764,10 +803,17 @@ textarea {
   padding: 1.1rem;
 }
 
+.resultRouteLeft > .flipPanel,
+.resultRouteRight {
+  width: 100%;
+  height: 100%;
+}
+
 .resultRailCards {
   display: grid;
   gap: 0.85rem;
   grid-template-rows: repeat(3, minmax(0, 1fr));
+  flex: 1;
   min-height: 0;
 }
 
@@ -780,24 +826,18 @@ textarea {
   font-size: clamp(1.3rem, 2vw, 1.7rem);
 }
 
-.flipPanelToggle {
-  display: inline-flex;
-  gap: 0.45rem;
-  padding: 0.25rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface-strong);
-}
-
 .flipPanelViewport {
   position: relative;
+  display: flex;
+  flex: 1;
   min-height: 0;
   perspective: 1400px;
 }
 
 .flipPanelInner {
   position: relative;
-  min-height: calc(100vh - 18rem);
+  width: 100%;
+  min-height: 100%;
   transform-style: preserve-3d;
 }
 
@@ -805,8 +845,6 @@ textarea {
   position: absolute;
   inset: 0;
   display: grid;
-  gap: 1rem;
-  align-content: start;
   padding: 0.25rem;
   backface-visibility: hidden;
   overflow: auto;
@@ -814,6 +852,41 @@ textarea {
 
 .flipFaceBack {
   transform: rotateY(180deg);
+}
+
+.flipFaceContent {
+  display: grid;
+  gap: 1rem;
+  width: min(30rem, 100%);
+  margin: auto;
+}
+
+.flipFaceContent-muse {
+  gap: 0.9rem;
+}
+
+.flipPanelTitle {
+  max-width: 12ch;
+}
+
+.flipMuseTitle {
+  font-size: clamp(2.1rem, 3.2vw, 3rem);
+  max-width: 11ch;
+}
+
+.flipMuseText {
+  max-width: 28ch;
+}
+
+.flipPanelHeader {
+  justify-content: flex-end;
+}
+
+.flipSingleToggle {
+  padding: 0.58rem 0.9rem;
+  font-family: var(--label-font);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
 }
 
 .resultsSummary {
@@ -939,7 +1012,6 @@ textarea {
   }
 
   .topBanner,
-  .resultPageHeader,
   .bubbleSelectionHeader,
   .resultRailHeader,
   .flipPanelHeader {
@@ -947,8 +1019,13 @@ textarea {
     align-items: stretch;
   }
 
+  .resultPageHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .resultControlCluster {
-    min-width: 0;
+    justify-content: flex-start;
   }
 }
 
@@ -966,13 +1043,20 @@ textarea {
   }
 
   .modeSwitch,
-  .flipPanelToggle {
+  .preferenceToggleRow,
+  .languageToggle,
+  .themeCycleButton {
     width: 100%;
   }
 
   .modeSwitchButton,
-  .flipPanelToggle button,
+  .languageToggleButton,
   .button {
     justify-content: center;
+  }
+
+  .preferenceToggleRow {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

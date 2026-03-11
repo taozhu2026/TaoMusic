@@ -2,36 +2,22 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { TaoMusicLockup } from '@/src/brand/taomusic-logo';
 import { createStableId } from '@/src/lib/id';
 import { getUiCopy } from '@/src/i18n/copy';
 import { usePreferences } from '@/src/providers/preferences-provider';
-import {
-  buildBubbleInput,
-} from '@/src/features/recommendations/bubbles/engine';
-import {
-  buildHydratedBubbleDraft,
-} from '@/src/features/recommendations/bubbles/drafts';
+import { buildBubbleInput } from '@/src/features/recommendations/bubbles/engine';
 import { ConstellationFlipPanel } from '@/src/features/recommendations/components/constellation-flip-panel';
-import { ModeSwitch } from '@/src/features/recommendations/components/mode-switch';
 import { ResultControlCluster } from '@/src/features/recommendations/components/result-control-cluster';
 import { ResultCard } from '@/src/features/recommendations/components/result-card';
-import {
-  saveHomeDrafts,
-} from '@/src/features/recommendations/home-drafts';
-import {
-  applyTuneModifier,
-  hasUsableSignal,
-  modifierToBubbleFocus,
-} from '@/src/features/recommendations/spark';
+import { saveHomeDrafts } from '@/src/features/recommendations/home-drafts';
 
 import type {
   BubbleDraft,
   RecommendationAction,
   RecommendationMode,
-  TuneModifier,
 } from '@/src/features/recommendations/experience-types';
 import type {
   RecommendationPostResponse,
@@ -41,8 +27,6 @@ import type {
   RecommendationInput,
   RecommendationResponse,
 } from '@/src/features/recommendations/types';
-
-type ResultPanelState = 'closed' | 'settings' | 'tune';
 
 interface ResultExperienceProps {
   initialResultId: string | null;
@@ -71,14 +55,8 @@ export function ResultExperience({ initialResultId }: ResultExperienceProps) {
   const [recentIds, setRecentIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeAction, setActiveAction] = useState<RecommendationAction | null>(null);
-  const [panelState, setPanelState] = useState<ResultPanelState>('closed');
   const [flipFace, setFlipFace] = useState<'constellation' | 'muse'>('constellation');
   const [expired, setExpired] = useState(false);
-
-  const bubbleInput = useMemo(
-    () => buildBubbleInput(bubbleDraft?.selectedIds ?? []),
-    [bubbleDraft?.selectedIds],
-  );
 
   useEffect(() => {
     const fetchResult = async () => {
@@ -177,7 +155,6 @@ export function ResultExperience({ initialResultId }: ResultExperienceProps) {
       setStructuredDraft(nextStructuredDraft);
       setBubbleDraft(nextBubbleDraft);
       setMode(nextMode);
-      setPanelState('closed');
       setFlipFace('constellation');
       setResultId(payload.resultId);
       router.replace(`/result?id=${encodeURIComponent(payload.resultId)}`);
@@ -186,51 +163,6 @@ export function ResultExperience({ initialResultId }: ResultExperienceProps) {
     } finally {
       setActiveAction(null);
     }
-  };
-
-  const handleModeChange = (nextMode: RecommendationMode) => {
-    if (!result || !bubbleDraft || isLoading || nextMode === mode) {
-      return;
-    }
-
-    if (nextMode === 'structured') {
-      const nextStructuredDraft = hasUsableSignal(structuredDraft)
-        ? structuredDraft
-        : hasUsableSignal(bubbleInput)
-          ? bubbleInput
-          : result.contextProfile.raw;
-
-      void postRecommendation({
-        action: 'reroll',
-        nextBubbleDraft: bubbleDraft,
-        nextMode,
-        nextStructuredDraft: {
-          ...nextStructuredDraft,
-          uiLanguage: language,
-        },
-      });
-      return;
-    }
-
-    const nextBubbleDraft =
-      bubbleDraft.selectedIds.length > 0
-        ? {
-            ...bubbleDraft,
-            dismissedIds: [],
-            seed: createStableId(),
-          }
-        : buildHydratedBubbleDraft(
-            hasUsableSignal(structuredDraft) ? structuredDraft : result.contextProfile.raw,
-            bubbleDraft.focus,
-            bubbleDraft.selectedIds,
-          );
-
-    void postRecommendation({
-      action: 'reroll',
-      nextBubbleDraft,
-      nextMode,
-      nextStructuredDraft: structuredDraft,
-    });
   };
 
   const handleReroll = () => {
@@ -246,51 +178,6 @@ export function ResultExperience({ initialResultId }: ResultExperienceProps) {
       },
       nextMode: mode,
       nextStructuredDraft: structuredDraft,
-    });
-  };
-
-  const handleTuneModifier = (modifier: TuneModifier) => {
-    if (!result || !bubbleDraft) {
-      return;
-    }
-
-    if (mode === 'structured') {
-      const nextStructuredDraft = applyTuneModifier(
-        hasUsableSignal(structuredDraft) ? structuredDraft : result.contextProfile.raw,
-        modifier,
-      );
-
-      void postRecommendation({
-        action: modifier === 'surprising' ? 'surprise' : 'reroll',
-        nextBubbleDraft: bubbleDraft,
-        nextMode: 'structured',
-        nextStructuredDraft,
-        surprise: modifier === 'surprising',
-      });
-      return;
-    }
-
-    const nextFocus = modifierToBubbleFocus(modifier);
-    const nextBubbleDraft =
-      bubbleDraft.selectedIds.length > 0
-        ? {
-            ...bubbleDraft,
-            dismissedIds: [],
-            focus: nextFocus,
-            seed: createStableId(),
-          }
-        : buildHydratedBubbleDraft(
-            result.contextProfile.raw,
-            nextFocus,
-            bubbleDraft.selectedIds,
-          );
-
-    void postRecommendation({
-      action: modifier === 'surprising' ? 'surprise' : 'reroll',
-      nextBubbleDraft,
-      nextMode: 'bubble',
-      nextStructuredDraft: structuredDraft,
-      surprise: modifier === 'surprising',
     });
   };
 
@@ -321,12 +208,9 @@ export function ResultExperience({ initialResultId }: ResultExperienceProps) {
           <TaoMusicLockup subtitle={copy.brandSubtitle} />
           <div className="resultHeaderMeta">
             <span className="metaChip">{copy.result.activityBadge}</span>
-            <ModeSwitch
-              disabled={isLoading}
-              language={language}
-              mode={mode}
-              onChange={handleModeChange}
-            />
+            <span className="metaChip">
+              {mode === 'bubble' ? copy.modes.bubble : copy.modes.structured}
+            </span>
           </div>
         </div>
         <ResultControlCluster
@@ -335,9 +219,6 @@ export function ResultExperience({ initialResultId }: ResultExperienceProps) {
           language={language}
           onBackHome={handleBackHome}
           onReroll={handleReroll}
-          onTogglePanel={setPanelState}
-          onTuneModifier={handleTuneModifier}
-          panelState={panelState}
         />
       </header>
 

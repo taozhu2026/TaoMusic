@@ -11,32 +11,25 @@ import {
 import { Button } from '@/src/components/ui/button';
 import { SelectField } from '@/src/components/ui/select-field';
 import { getUiCopy } from '@/src/i18n/copy';
-import {
-  PresetStrip,
-  type RecommendationPreset,
-} from '@/src/features/recommendations/components/preset-strip';
 import { SignalSummary } from '@/src/features/recommendations/components/signal-summary';
 
 import type { UiLanguage } from '@/src/i18n/types';
 import type { RecommendationAction } from '@/src/features/recommendations/experience-types';
+import type { RecommendationPreset } from '@/src/features/recommendations/components/preset-strip';
 import type { RecommendationInput } from '@/src/features/recommendations/types';
 
 interface ContextFormProps {
   activeAction: RecommendationAction | null;
   canGenerate: boolean;
-  canReroll: boolean;
   isLoading: boolean;
   language: UiLanguage;
-  onApplyPreset: (preset: RecommendationPreset) => void;
   values: RecommendationInput;
   onChange: (field: keyof RecommendationInput, value: string) => void;
   onGenerate: () => void;
-  onReroll: () => void;
-  onSpark: () => void;
   onSurprise: () => void;
 }
 
-const PRESETS: RecommendationPreset[] = [
+export const STRUCTURED_PRESETS: RecommendationPreset[] = [
   {
     id: 'midnight-margins',
     label: { en: 'Midnight Margins', zh: '午夜页边' },
@@ -81,15 +74,11 @@ const PRESETS: RecommendationPreset[] = [
 export function ContextForm({
   activeAction,
   canGenerate,
-  canReroll,
   isLoading,
   language,
-  onApplyPreset,
   values,
   onChange,
   onGenerate,
-  onReroll,
-  onSpark,
   onSurprise,
 }: ContextFormProps) {
   const copy = getUiCopy(language);
@@ -120,15 +109,6 @@ export function ContextForm({
           values={values}
         />
       </div>
-
-      <PresetStrip
-        language={language}
-        onSelect={onApplyPreset}
-        presets={PRESETS}
-        text={copy.home.startingPointText}
-        title={copy.home.startingPoints}
-        useFirstLabel={copy.home.useFirstPreset}
-      />
 
       <div className="formPanel">
         <div className="fieldGrid">
@@ -201,9 +181,6 @@ export function ContextForm({
           <Button disabled={!canGenerate || isLoading} onClick={onGenerate} type="button">
             {activeAction === 'generate' ? copy.common.composing : copy.common.generate}
           </Button>
-          <Button disabled={isLoading} onClick={onSpark} type="button" variant="secondary">
-            {copy.common.spark}
-          </Button>
           <Button
             disabled={!canGenerate || isLoading}
             onClick={onSurprise}
@@ -211,14 +188,6 @@ export function ContextForm({
             variant="secondary"
           >
             {activeAction === 'surprise' ? copy.common.detouring : copy.common.addSurprise}
-          </Button>
-          <Button
-            disabled={!canReroll || isLoading}
-            onClick={onReroll}
-            type="button"
-            variant="ghost"
-          >
-            {activeAction === 'reroll' ? copy.common.rerolling : copy.common.reroll}
           </Button>
         </div>
 
