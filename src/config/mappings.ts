@@ -1,121 +1,159 @@
-import type { EnergyLevel, FocusLevel } from '@/src/features/recommendations/types';
+import type { UiLanguage } from '@/src/i18n/types';
+import type { EnergyLevel, FocusLevel, RecommendationField } from '@/src/features/recommendations/types';
+import type { LocalizedText } from '@/src/i18n/types';
 
 export interface FormOption {
-  label: string;
+  labels: LocalizedText;
   value: string;
 }
 
 interface MappingDefinition {
-  tags: string[];
-  genreHints?: string[];
   energyLevel?: EnergyLevel;
   focusLevel?: FocusLevel;
+  genreHints?: string[];
+  tags: string[];
   tone?: string;
 }
 
+const text = (en: string, zh: string): LocalizedText => ({ en, zh });
+
+export const localizeText = (value: LocalizedText, language: UiLanguage): string => {
+  return value[language];
+};
+
+export const localizeOptions = (
+  options: FormOption[],
+  language: UiLanguage,
+): Array<{ label: string; value: string }> => {
+  return options.map((option) => ({
+    label: option.labels[language],
+    value: option.value,
+  }));
+};
+
+export const getOptionLabel = (
+  options: FormOption[],
+  value: string,
+  language: UiLanguage,
+): string => {
+  return options.find((option) => option.value === value)?.labels[language] ?? value;
+};
+
 export const ACTIVITY_OPTIONS: FormOption[] = [
-  { value: 'coding', label: 'Coding' },
-  { value: 'reading', label: 'Reading' },
-  { value: 'cooking', label: 'Cooking' },
-  { value: 'thinking', label: 'Thinking' },
-  { value: 'walking', label: 'Walking' },
-  { value: 'late-night-work', label: 'Late-night work' },
-  { value: 'writing', label: 'Writing' },
-  { value: 'commuting', label: 'Commuting' },
+  { value: 'coding', labels: text('Coding', '编程') },
+  { value: 'reading', labels: text('Reading', '阅读') },
+  { value: 'cooking', labels: text('Cooking', '做饭') },
+  { value: 'thinking', labels: text('Thinking', '思考') },
+  { value: 'walking', labels: text('Walking', '散步') },
+  { value: 'late-night-work', labels: text('Late-night work', '深夜工作') },
+  { value: 'writing', labels: text('Writing', '写作') },
+  { value: 'commuting', labels: text('Commuting', '通勤') },
 ];
 
 export const MOOD_OPTIONS: FormOption[] = [
-  { value: 'calm', label: 'Calm' },
-  { value: 'dreamy', label: 'Dreamy' },
-  { value: 'focused', label: 'Focused' },
-  { value: 'energetic', label: 'Energetic' },
-  { value: 'melancholic', label: 'Melancholic' },
-  { value: 'warm', label: 'Warm' },
-  { value: 'nostalgic', label: 'Nostalgic' },
-  { value: 'intimate', label: 'Intimate' },
-  { value: 'cinematic', label: 'Cinematic' },
-  { value: 'reflective', label: 'Reflective' },
-  { value: 'euphoric', label: 'Euphoric' },
-  { value: 'restless', label: 'Restless' },
-  { value: 'bittersweet', label: 'Bittersweet' },
-  { value: 'nocturnal', label: 'Nocturnal' },
-  { value: 'tender', label: 'Tender' },
-  { value: 'weightless', label: 'Weightless' },
-  { value: 'hopeful', label: 'Hopeful' },
+  { value: 'calm', labels: text('Calm', '平静') },
+  { value: 'dreamy', labels: text('Dreamy', '梦幻') },
+  { value: 'focused', labels: text('Focused', '专注') },
+  { value: 'energetic', labels: text('Energetic', '有能量') },
+  { value: 'melancholic', labels: text('Melancholic', '忧郁') },
+  { value: 'warm', labels: text('Warm', '温暖') },
+  { value: 'nostalgic', labels: text('Nostalgic', '怀旧') },
+  { value: 'intimate', labels: text('Intimate', '亲密') },
+  { value: 'cinematic', labels: text('Cinematic', '电影感') },
+  { value: 'reflective', labels: text('Reflective', '沉思') },
+  { value: 'euphoric', labels: text('Euphoric', '亢奋') },
+  { value: 'restless', labels: text('Restless', '躁动') },
+  { value: 'bittersweet', labels: text('Bittersweet', '苦甜交织') },
+  { value: 'nocturnal', labels: text('Nocturnal', '夜色') },
+  { value: 'tender', labels: text('Tender', '柔软') },
+  { value: 'weightless', labels: text('Weightless', '轻盈') },
+  { value: 'hopeful', labels: text('Hopeful', '有希望') },
 ];
 
 export const COLOR_OPTIONS: FormOption[] = [
-  { value: 'blue', label: 'Blue' },
-  { value: 'red', label: 'Red' },
-  { value: 'black', label: 'Black' },
-  { value: 'white', label: 'White' },
-  { value: 'gold', label: 'Gold' },
-  { value: 'green', label: 'Green' },
+  { value: 'blue', labels: text('Blue', '蓝') },
+  { value: 'red', labels: text('Red', '红') },
+  { value: 'black', labels: text('Black', '黑') },
+  { value: 'white', labels: text('White', '白') },
+  { value: 'gold', labels: text('Gold', '金') },
+  { value: 'green', labels: text('Green', '绿') },
 ];
 
 export const COUNTRY_OPTIONS: FormOption[] = [
-  { value: 'china', label: 'China' },
-  { value: 'korea', label: 'Korea' },
-  { value: 'france', label: 'France' },
-  { value: 'germany', label: 'Germany' },
-  { value: 'india', label: 'India' },
-  { value: 'japan', label: 'Japan' },
-  { value: 'brazil', label: 'Brazil' },
-  { value: 'russia', label: 'Russia' },
-  { value: 'united-states', label: 'United States' },
-  { value: 'united-kingdom', label: 'United Kingdom' },
-  { value: 'iceland', label: 'Iceland' },
-  { value: 'middle-east', label: 'Middle East' },
-  { value: 'nordic', label: 'Nordic' },
-  { value: 'latin', label: 'Latin' },
-  { value: 'african', label: 'African' },
+  { value: 'china', labels: text('China', '中国') },
+  { value: 'korea', labels: text('Korea', '韩国') },
+  { value: 'japan', labels: text('Japan', '日本') },
+  { value: 'russia', labels: text('Russia', '俄罗斯') },
+  { value: 'united-kingdom', labels: text('United Kingdom', '英国') },
+  { value: 'united-states', labels: text('United States', '美国') },
+  { value: 'france', labels: text('France', '法国') },
+  { value: 'germany', labels: text('Germany', '德国') },
+  { value: 'brazil', labels: text('Brazil', '巴西') },
+  { value: 'india', labels: text('India', '印度') },
+  { value: 'middle-east', labels: text('Middle East', '中东') },
+  { value: 'nordic', labels: text('Nordic', '北欧') },
+  { value: 'latin', labels: text('Latin', '拉丁') },
+  { value: 'african', labels: text('African', '非洲') },
 ];
 
 export const GENRE_OPTIONS: FormOption[] = [
-  { value: 'pop', label: 'Pop' },
-  { value: 'rock', label: 'Rock' },
-  { value: 'hip-hop', label: 'Hip-hop' },
-  { value: 'ambient', label: 'Ambient' },
-  { value: 'jazz', label: 'Jazz' },
-  { value: 'r-and-b', label: 'R&B' },
-  { value: 'city-pop', label: 'City pop' },
-  { value: 'shoegaze', label: 'Shoegaze' },
-  { value: 'indie', label: 'Indie' },
-  { value: 'electronic', label: 'Electronic' },
-  { value: 'folk', label: 'Folk' },
-  { value: 'lo-fi', label: 'Lo-fi' },
-  { value: 'synthwave', label: 'Synthwave' },
-  { value: 'house', label: 'House' },
-  { value: 'techno', label: 'Techno' },
-  { value: 'post-rock', label: 'Post-rock' },
-  { value: 'orchestral', label: 'Orchestral' },
-  { value: 'trap', label: 'Trap' },
-  { value: 'funk', label: 'Funk' },
-  { value: 'soul', label: 'Soul' },
-  { value: 'classical', label: 'Classical' },
+  { value: 'pop', labels: text('Pop', '流行') },
+  { value: 'rock', labels: text('Rock', '摇滚') },
+  { value: 'hip-hop', labels: text('Hip-hop', '嘻哈') },
+  { value: 'ambient', labels: text('Ambient', '氛围') },
+  { value: 'jazz', labels: text('Jazz', '爵士') },
+  { value: 'r-and-b', labels: text('R&B', 'R&B') },
+  { value: 'city-pop', labels: text('City pop', 'City pop') },
+  { value: 'shoegaze', labels: text('Shoegaze', '自赏') },
+  { value: 'indie', labels: text('Indie', '独立') },
+  { value: 'electronic', labels: text('Electronic', '电子') },
+  { value: 'folk', labels: text('Folk', '民谣') },
+  { value: 'lo-fi', labels: text('Lo-fi', 'Lo-fi') },
+  { value: 'synthwave', labels: text('Synthwave', '合成器浪潮') },
+  { value: 'house', labels: text('House', 'House') },
+  { value: 'techno', labels: text('Techno', 'Techno') },
+  { value: 'post-rock', labels: text('Post-rock', '后摇') },
+  { value: 'orchestral', labels: text('Orchestral', '管弦') },
+  { value: 'trap', labels: text('Trap', 'Trap') },
+  { value: 'funk', labels: text('Funk', 'Funk') },
+  { value: 'soul', labels: text('Soul', 'Soul') },
+  { value: 'classical', labels: text('Classical', '古典') },
 ];
 
 export const LYRICAL_THEME_OPTIONS: FormOption[] = [
-  { value: 'love', label: 'Love' },
-  { value: 'solitude', label: 'Solitude' },
-  { value: 'memory', label: 'Memory' },
-  { value: 'adventure', label: 'Adventure' },
-  { value: 'longing', label: 'Longing' },
-  { value: 'escape', label: 'Escape' },
-  { value: 'healing', label: 'Healing' },
-  { value: 'heartbreak', label: 'Heartbreak' },
+  { value: 'love', labels: text('Love', '爱') },
+  { value: 'solitude', labels: text('Solitude', '独处') },
+  { value: 'memory', labels: text('Memory', '记忆') },
+  { value: 'adventure', labels: text('Adventure', '冒险') },
+  { value: 'longing', labels: text('Longing', '想念') },
+  { value: 'escape', labels: text('Escape', '逃离') },
+  { value: 'healing', labels: text('Healing', '疗愈') },
+  { value: 'heartbreak', labels: text('Heartbreak', '心碎') },
 ];
 
 export const SCENE_OPTIONS: FormOption[] = [
-  { value: 'study', label: 'Study' },
-  { value: 'driving', label: 'Driving' },
-  { value: 'late-night', label: 'Late night' },
-  { value: 'rainy-day', label: 'Rainy day' },
-  { value: 'gym', label: 'Gym' },
-  { value: 'sunset', label: 'Sunset' },
-  { value: 'heartbreak', label: 'Heartbreak' },
-  { value: 'healing', label: 'Healing' },
+  { value: 'study', labels: text('Study', '学习') },
+  { value: 'driving', labels: text('Driving', '开车') },
+  { value: 'late-night', labels: text('Late night', '深夜') },
+  { value: 'rainy-day', labels: text('Rainy day', '雨天') },
+  { value: 'gym', labels: text('Gym', '健身') },
+  { value: 'sunset', labels: text('Sunset', '日落') },
+  { value: 'heartbreak', labels: text('Heartbreak', '失恋') },
+  { value: 'healing', labels: text('Healing', '疗愈') },
 ];
+
+export const FIELD_OPTION_MAP: Record<
+  Exclude<RecommendationField, 'uiLanguage' | 'surprise' | 'rerollSeed' | 'excludeIds'>,
+  FormOption[]
+> = {
+  activity: ACTIVITY_OPTIONS,
+  color: COLOR_OPTIONS,
+  country: COUNTRY_OPTIONS,
+  genre: GENRE_OPTIONS,
+  lyricalTheme: LYRICAL_THEME_OPTIONS,
+  mood: MOOD_OPTIONS,
+  scene: SCENE_OPTIONS,
+};
 
 export const ACTIVITY_MAPPINGS: Record<string, MappingDefinition> = {
   coding: {
@@ -177,92 +215,32 @@ export const ACTIVITY_MAPPINGS: Record<string, MappingDefinition> = {
 };
 
 export const MOOD_MAPPINGS: Record<string, MappingDefinition> = {
-  calm: {
-    tags: ['calm', 'soft', 'breathing-room'],
-    energyLevel: 'low',
-    tone: 'quiet',
-  },
-  dreamy: {
-    tags: ['dreamy', 'floating', 'blurred-edges'],
-    energyLevel: 'low',
-    tone: 'dreamy',
-  },
+  calm: { tags: ['calm', 'soft', 'breathing-room'], energyLevel: 'low', tone: 'quiet' },
+  dreamy: { tags: ['dreamy', 'floating', 'blurred-edges'], energyLevel: 'low', tone: 'dreamy' },
   focused: {
     tags: ['focused', 'clean-lines', 'instrumental'],
     energyLevel: 'medium',
     focusLevel: 'focus',
     tone: 'precise',
   },
-  energetic: {
-    tags: ['energetic', 'bright', 'kinetic'],
-    energyLevel: 'high',
-    tone: 'electric',
-  },
+  energetic: { tags: ['energetic', 'bright', 'kinetic'], energyLevel: 'high', tone: 'electric' },
   melancholic: {
     tags: ['melancholic', 'tender', 'blue-hour'],
     energyLevel: 'low',
     tone: 'reflective',
   },
-  warm: {
-    tags: ['warm', 'glow', 'human'],
-    energyLevel: 'medium',
-    tone: 'warm',
-  },
-  nostalgic: {
-    tags: ['nostalgic', 'faded', 'remembered'],
-    energyLevel: 'low',
-    tone: 'reflective',
-  },
-  intimate: {
-    tags: ['intimate', 'close', 'small-room'],
-    energyLevel: 'low',
-    tone: 'tender',
-  },
-  cinematic: {
-    tags: ['cinematic', 'wide-screen', 'dramatic'],
-    energyLevel: 'medium',
-    tone: 'open',
-  },
-  reflective: {
-    tags: ['reflective', 'interior', 'slow-burn'],
-    energyLevel: 'low',
-    tone: 'reflective',
-  },
-  euphoric: {
-    tags: ['euphoric', 'lift', 'radiant'],
-    energyLevel: 'high',
-    tone: 'electric',
-  },
-  restless: {
-    tags: ['restless', 'uneasy', 'moving'],
-    energyLevel: 'medium',
-    tone: 'electric',
-  },
-  bittersweet: {
-    tags: ['bittersweet', 'tender', 'afterglow'],
-    energyLevel: 'low',
-    tone: 'reflective',
-  },
-  nocturnal: {
-    tags: ['nocturnal', 'after-hours', 'blue-hour'],
-    energyLevel: 'low',
-    tone: 'nocturnal',
-  },
-  tender: {
-    tags: ['tender', 'soft', 'close'],
-    energyLevel: 'low',
-    tone: 'tender',
-  },
-  weightless: {
-    tags: ['weightless', 'floating', 'air'],
-    energyLevel: 'low',
-    tone: 'dreamy',
-  },
-  hopeful: {
-    tags: ['hopeful', 'rising', 'light-returning'],
-    energyLevel: 'medium',
-    tone: 'open',
-  },
+  warm: { tags: ['warm', 'glow', 'human'], energyLevel: 'medium', tone: 'warm' },
+  nostalgic: { tags: ['nostalgic', 'faded', 'remembered'], energyLevel: 'low', tone: 'reflective' },
+  intimate: { tags: ['intimate', 'close', 'small-room'], energyLevel: 'low', tone: 'tender' },
+  cinematic: { tags: ['cinematic', 'wide-screen', 'dramatic'], energyLevel: 'medium', tone: 'open' },
+  reflective: { tags: ['reflective', 'interior', 'slow-burn'], energyLevel: 'low', tone: 'reflective' },
+  euphoric: { tags: ['euphoric', 'lift', 'radiant'], energyLevel: 'high', tone: 'electric' },
+  restless: { tags: ['restless', 'uneasy', 'moving'], energyLevel: 'medium', tone: 'electric' },
+  bittersweet: { tags: ['bittersweet', 'tender', 'afterglow'], energyLevel: 'low', tone: 'reflective' },
+  nocturnal: { tags: ['nocturnal', 'after-hours', 'blue-hour'], energyLevel: 'low', tone: 'nocturnal' },
+  tender: { tags: ['tender', 'soft', 'close'], energyLevel: 'low', tone: 'tender' },
+  weightless: { tags: ['weightless', 'floating', 'air'], energyLevel: 'low', tone: 'dreamy' },
+  hopeful: { tags: ['hopeful', 'rising', 'light-returning'], energyLevel: 'medium', tone: 'open' },
 };
 
 export const COLOR_MAPPINGS: Record<string, MappingDefinition> = {

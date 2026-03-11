@@ -1,12 +1,19 @@
+import type { UiLanguage } from '@/src/i18n/types';
 import type { RecommendationMode } from '@/src/features/recommendations/experience-types';
 
 interface ModeSwitchProps {
   disabled?: boolean;
+  language: UiLanguage;
   mode: RecommendationMode;
   onChange: (mode: RecommendationMode) => void;
 }
 
-export function ModeSwitch({ disabled = false, mode, onChange }: ModeSwitchProps) {
+export function ModeSwitch({
+  disabled = false,
+  language,
+  mode,
+  onChange,
+}: ModeSwitchProps) {
   return (
     <div className="modeSwitch" role="tablist" aria-label="Recommendation input mode">
       <button
@@ -19,7 +26,7 @@ export function ModeSwitch({ disabled = false, mode, onChange }: ModeSwitchProps
         role="tab"
         type="button"
       >
-        Structured mode
+        {language === 'zh' ? '结构化模式' : 'Structured mode'}
       </button>
       <button
         className={['modeSwitchButton', mode === 'bubble' ? 'modeSwitchButton-active' : '']
@@ -31,7 +38,7 @@ export function ModeSwitch({ disabled = false, mode, onChange }: ModeSwitchProps
         role="tab"
         type="button"
       >
-        Muse bubble mode
+        {language === 'zh' ? 'Muse bubble 模式' : 'Muse bubble mode'}
       </button>
     </div>
   );

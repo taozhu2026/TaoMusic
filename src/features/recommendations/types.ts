@@ -1,67 +1,79 @@
+import type { UiLanguage } from '@/src/i18n/types';
+
 export type EnergyLevel = 'low' | 'medium' | 'high';
 export type FocusLevel = 'focus' | 'balanced' | 'expressive';
+export type TempoTag = 'slow' | 'steady' | 'midtempo' | 'driving' | 'fast';
+export type ValenceTag = 'dim' | 'soft' | 'bright' | 'uplifting';
 
 export interface RecommendationInput {
   activity?: string;
   color?: string;
   country?: string;
+  excludeIds?: string[];
   genre?: string;
   lyricalTheme?: string;
   mood?: string;
+  rerollSeed?: string;
   scene?: string;
   surprise?: boolean;
-  rerollSeed?: string;
-  excludeIds?: string[];
+  uiLanguage?: UiLanguage;
 }
 
+export type RecommendationField = keyof RecommendationInput;
+
 export interface ContextProfile {
-  raw: RecommendationInput;
   activityTags: string[];
-  moodTags: string[];
   colorTags: string[];
-  sceneTags: string[];
-  genrePreference: string[];
-  lyricalThemeTags: string[];
   derivedTags: string[];
-  regionPreference?: string;
   energyLevel?: EnergyLevel;
   focusLevel?: FocusLevel;
-  tone: string;
+  genrePreference: string[];
+  lyricalThemeTags: string[];
+  moodTags: string[];
+  raw: RecommendationInput;
+  regionPreference?: string;
+  sceneTags: string[];
   surpriseLabel?: string;
+  tone: string;
 }
 
 export interface QueryPlan {
-  primaryTerms: string[];
-  secondaryTerms: string[];
   genre?: string;
-  region?: string;
   limit: number;
+  primaryTerms: string[];
+  region?: string;
+  secondaryTerms: string[];
 }
 
 export interface MusicCandidate {
-  id: string;
-  title: string;
-  artist: string;
   album?: string;
-  genreTags: string[];
-  moodTags: string[];
-  region?: string;
-  instrumentationTags: string[];
-  lyricalThemeTags: string[];
+  artist: string;
   artworkColorHint?: string;
-  popularity?: number;
+  artworkUrl?: string;
   energyLevel?: EnergyLevel;
   focusLevel?: FocusLevel;
+  genreTags: string[];
+  id: string;
+  instrumentationTags: string[];
+  language?: string;
+  lyricalThemeTags: string[];
+  moodTags: string[];
+  popularity?: number;
+  region?: string;
+  sceneTags?: string[];
   searchKeywords: string[];
-  artworkUrl?: string;
   source: string;
+  tempoTag?: TempoTag;
+  title: string;
+  valenceTag?: ValenceTag;
+  year?: number;
 }
 
 export interface RankedRecommendation {
   candidate: MusicCandidate;
-  score: number;
-  noveltyScore: number;
   matchReasons: string[];
+  noveltyScore: number;
+  score: number;
 }
 
 export type ProviderKind = 'external' | 'fallback';
@@ -77,19 +89,19 @@ export interface ProviderDebugSummary {
 
 export interface SerendipityOutput {
   line: string;
-  tone: string;
   source: 'llm' | 'template';
+  tone: string;
 }
 
 export interface RecommendationResponse {
   contextProfile: ContextProfile;
-  recommendations: RankedRecommendation[];
-  serendipity: SerendipityOutput;
   debug: {
     appliedSurprise?: string;
+    candidateCount: number;
+    latencyMs: number;
     providerUsed: string;
     providers: ProviderDebugSummary[];
-    latencyMs: number;
-    candidateCount: number;
   };
+  recommendations: RankedRecommendation[];
+  serendipity: SerendipityOutput;
 }

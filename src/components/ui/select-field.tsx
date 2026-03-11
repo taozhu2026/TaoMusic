@@ -1,10 +1,8 @@
-import type { FormOption } from '@/src/config/mappings';
-
 interface SelectFieldProps {
   hint?: string;
   index?: string;
   label: string;
-  options: FormOption[];
+  options: Array<{ label: string; value: string }>;
   placeholder: string;
   value: string;
   onChange: (value: string) => void;

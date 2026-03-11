@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": false,
+    "outDir": "../.catalog-check",
+    "rootDir": ".."
+  },
+  "include": [
+    "./validate-catalog.ts",
+    "../data/catalog/**/*.ts",
+    "../src/features/recommendations/types.ts",
+    "../src/lib/text.ts"
+  ]
+}

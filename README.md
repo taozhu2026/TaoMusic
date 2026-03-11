@@ -1,88 +1,61 @@
-# TaoMusic v0.5
+# TaoMusic v0.6
 
-TaoMusic is a lightweight AI-assisted web app for contextual music discovery and creative inspiration. Users provide a few human signals such as activity, mood, color, country, genre, or lyrical theme, and the app returns a small set of music suggestions plus a compact serendipity line.
+TaoMusic is a lightweight AI-assisted music muse for contextual discovery. You provide a few human signals such as activity, mood, color, region, genre, scene, or lyrical theme, and the app returns a compact three-track constellation plus an editorial interpretation.
 
-v0.5 turns the product into a state-driven two-stage experience. The core recommendation system stays intact, but the interface now separates home input from result viewing, adds a compact result screen with floating controls, and fully implements Muse Bubble Mode as a first-class input path.
+v0.6 is the first route-split release. The home page is now input-only, generated results move onto a dedicated `/result?id=...` route, the interface supports theme and language preferences globally, and the local music index has been expanded to a 400+ structured catalog with strong Chinese and East Asian coverage.
 
-## Product Description
+## What Changed in v0.6
 
-TaoMusic is intentionally narrow:
+- Split the app into `/` for input and `/result?id=<resultId>` for result viewing
+- Added temporary server-side `resultId` caching plus `GET /api/result`
+- Redesigned the result route into a two-column one-screen layout
+- Added a flip panel that switches between `Current Constellation` and `Muse Card · 灵感卡片`
+- Added full `light / dark / system` theme support with persistence and system-following behavior
+- Added full English and Simplified Chinese UI switching with live persistence
+- Localized structured taxonomy labels, bubble labels, presets, controls, and result UI
+- Replaced the tiny fallback seed list with a modular local catalog of 486 tracks
+- Added UI-language-aware ranking bias so Chinese UI leans toward Chinese and East Asian tracks without hard filtering
 
-- not a streaming service
-- not a full recommendation platform
-- not a chat product
+## Current Product Shape
 
-It is an `AI music muse`:
+- `/`
+  - structured mode with compact select controls
+  - bubble mode with tactile bubble selection
+  - global settings access for theme and language
+- `/result`
+  - dedicated result route backed by temporary cached `resultId`
+  - top-right reroll, tune, settings, and back-home controls
+  - left flip panel for constellation summary and Muse Card
+  - right rail with exactly three recommended tracks
 
-- fast
-- session-only
-- aesthetically driven
-- explainable in how it maps context to music
-- resilient when external APIs are unavailable
+## Local Catalog
 
-## What Changed in v0.5
+The local recommendation baseline is now a modular in-repo catalog:
 
-- Refactored the page into explicit `home_input`, `generating`, `result_view`, and `tuning` states
-- Added a compact result-state header with automatic mode-switch regeneration
-- Added a floating control panel with `Reroll`, `Tune`, and `Back to home`
-- Added quick tune modifiers for warmer, nocturnal, focused, and more surprising variations
-- Added Muse Card reveal, minimize, and reopen behavior instead of showing the card fully by default
-- Upgraded structured inputs to stronger chip-based controls
-- Expanded Muse Bubble Mode with animated tactile bubbles, Spark selection, and stronger selection feedback
-- Expanded the vocabulary for regions/cultures, moods, genres, and scenes
-- Added `scene` as a new recommendation input signal
-- Added Framer Motion transitions across screen states and result interactions
+- total local catalog size: `486`
+- Chinese-language tracks: `216`
+- Japanese tracks: `80`
+- Korean tracks: `70`
+- East Asian coverage total: `366`
 
-## Current Features
+Catalog records are structured with language, region, genre tags, mood tags, scene tags, lyrical-theme tags, instrumentation tags, and additional scoring metadata. The app still supports optional Spotify enrichment, but core recommendation quality no longer depends on external providers.
 
-### Fully implemented
+## API Endpoints
 
-- Single-page web experience with editorial UI
-- State-driven two-stage flow for input, generation, result view, and tuning
-- Context form for `activity`, `mood`, `color`, `country`, `genre`, `scene`, and `lyrical theme`
-- Chip-style structured controls with Spark seeding
-- Muse Bubble Mode with animated bubble selection, focus presets, Spark, refresh, reroll, and surprise flows
-- Automatic mode-switch regeneration while in the result view
-- Floating result controls and quick tuning modifiers
-- Reveal/minimize/reopen Muse Card flow
-- Preset moods for quick exploration
-- Recommendation API endpoint at `POST /api/recommend`
-- Deterministic recommendation pipeline:
-  - input validation
-  - context normalization
-  - candidate retrieval
-  - weighted scoring
-  - diversity pass
-  - final result shaping
-- Reroll flow with recent-result exclusion
-- Surprise flow that injects one additional signal
-- Clipboard-based text sharing
-- Screenshot-friendly share-card panel
-- Motion-enhanced, atmospheric responsive UI across home and result surfaces
-- Health endpoint at `GET /api/health`
-- Production build verified with `npm run build`
-- Type safety verified with `npm run typecheck`
+- `POST /api/recommend`
+  - accepts a generation envelope with `input`, `mode`, `structuredDraft`, and `bubbleDraft`
+  - returns `{ resultId }`
+- `GET /api/result?id=<resultId>`
+  - fetches the cached result envelope for the dedicated result route
+- `GET /api/health`
+  - reports version and provider availability
 
-### Implemented with fallback behavior
-
-- Music retrieval always works through the curated local seed library in [`data/seed-candidates.ts`](data/seed-candidates.ts)
-- External Spotify enrichment is optional and non-blocking
-- If Spotify lookup fails, the request still resolves through the local library
-- Serendipity line generation falls back to local templates if no LLM key is configured or the LLM call fails
-
-### Optional external integrations currently supported
-
-- Spotify track search plus artist-genre enrichment
-- OpenAI-compatible chat completion for serendipity lines
-
-## Local Run Instructions
+## Local Run
 
 ### Prerequisites
 
 - Node.js `20.20.0` or newer
 - npm `10+`
-
-If you use `nvm`, a matching version is provided in `.nvmrc`.
 
 ### Install
 
@@ -90,7 +63,7 @@ If you use `nvm`, a matching version is provided in `.nvmrc`.
 npm install
 ```
 
-### Start the app
+### Start development
 
 ```bash
 npm run dev
@@ -98,63 +71,31 @@ npm run dev
 
 Open `http://localhost:3000`.
 
-## Build Instructions
-
-### Typecheck
+## Verification
 
 ```bash
 npm run typecheck
-```
-
-### Production build
-
-```bash
+npm run catalog:check
 npm run build
 ```
 
-### Run the full local verification pass
+Or run the combined check:
 
 ```bash
 npm run check
 ```
 
-### Start the production server locally
-
-```bash
-npm run start
-```
-
 ## Environment Variables
 
-Copy `.env.example` to `.env.local` and add only what you need.
+Base TaoMusic works without any environment variables.
 
-### Required for the base product
-
-None. TaoMusic works end to end with the local seed library and template serendipity output.
-
-### Optional
+Optional integrations:
 
 - `SPOTIFY_CLIENT_ID`
-  - Enables Spotify metadata and candidate enrichment
 - `SPOTIFY_CLIENT_SECRET`
-  - Enables Spotify OAuth token acquisition
 - `OPENAI_API_KEY`
-  - Enables LLM-generated serendipity lines
 - `OPENAI_MODEL`
-  - Defaults to `gpt-4.1-mini`
 - `OPENAI_BASE_URL`
-  - Defaults to `https://api.openai.com/v1`
-  - Allows OpenAI-compatible providers
-
-## External vs Fallback Behavior
-
-| Area | Status | Notes |
-| --- | --- | --- |
-| Seed music catalog | Fallback baseline | Always available |
-| Spotify retrieval and enrichment | Optional external | Used only when credentials are configured |
-| Serendipity LLM generation | Optional external | Falls back to template copy |
-| Recommendation scoring and ranking | Local and explicit | Never outsourced |
-| Share-card rendering | Local and complete | No external service required |
 
 ## Project Structure
 
@@ -163,47 +104,40 @@ app/
   api/
     health/
     recommend/
+    result/
   globals.css
   icon.svg
   layout.tsx
   page.tsx
+  result/
 data/
-  seed-candidates.ts
+  catalog/
 docs/
   brand-directions.md
   planning-brief.md
-public/
-  brand/
+  muse-bubble-mode-plan.md
+scripts/
+  validate-catalog.ts
 src/
   brand/
   components/ui/
   config/
   features/recommendations/
+  i18n/
   lib/
+  providers/
   services/
 ```
 
-## Known Limitations
+## Limitations
 
-- The curated seed dataset is still intentionally small, so some combinations may repeat over time.
-- Spotify enrichment improves realism, but the app still does not have deep lyrical-theme or artwork-color understanding from external data.
-- Region handling for external tracks is still lightweight and inferred from the query context rather than verified track geography.
-- Share export is screenshot-oriented, not a generated image or downloadable artifact.
-- There is still no persistence, no accounts, and no database.
-- There is still no automated test suite beyond typecheck and production build verification.
-
-## Deferred for Future Versions
-
-- Last.fm or multi-provider enrichment
-- Richer metadata fusion and better region/theme inference
-- Export-to-image or downloadable share assets
-- Lightweight browser persistence
-- Personalization and long-term recommendation memory
-- Audio preview or playback integration
+- Result ids are temporary, in-memory, and intended for the current deployment model rather than durable sharing.
+- The local catalog is editorial and structured, but it is still not a live streaming index.
+- Spotify enrichment remains opportunistic and does not drive the core recommendation flow.
+- Serendipity line generation can still fall back to local templates if no LLM provider is configured.
 
 ## Notes
 
-- The earlier Muse Bubble Mode planning document remains in [`docs/muse-bubble-mode-plan.md`](docs/muse-bubble-mode-plan.md)
-- The selected v0.2 identity direction is documented in [`docs/brand-directions.md`](docs/brand-directions.md)
-- The original ideation brief is archived in [`docs/planning-brief.md`](docs/planning-brief.md)
-- The repository includes an MIT [`LICENSE`](LICENSE)
+- v0.2 brand direction notes are in [`docs/brand-directions.md`](docs/brand-directions.md)
+- early product ideation is archived in [`docs/planning-brief.md`](docs/planning-brief.md)
+- Muse Bubble Mode planning remains documented in [`docs/muse-bubble-mode-plan.md`](docs/muse-bubble-mode-plan.md)

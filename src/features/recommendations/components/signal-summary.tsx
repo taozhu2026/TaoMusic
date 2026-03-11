@@ -1,21 +1,43 @@
-import type { RecommendationInput } from '@/src/features/recommendations/types';
+import {
+  FIELD_OPTION_MAP,
+  getOptionLabel,
+} from '@/src/config/mappings';
+
+import type { UiLanguage } from '@/src/i18n/types';
+import type {
+  RecommendationField,
+  RecommendationInput,
+} from '@/src/features/recommendations/types';
 
 interface SignalSummaryProps {
-  title?: string;
+  emptyText: string;
+  language: UiLanguage;
+  title: string;
   values: RecommendationInput;
 }
 
-const FIELD_LABELS: Array<{ key: keyof RecommendationInput; label: string }> = [
-  { key: 'activity', label: 'Activity' },
-  { key: 'mood', label: 'Mood' },
-  { key: 'color', label: 'Color' },
-  { key: 'country', label: 'Region / culture' },
-  { key: 'genre', label: 'Genre' },
-  { key: 'scene', label: 'Scene' },
-  { key: 'lyricalTheme', label: 'Theme' },
+const FIELD_LABELS: Array<{
+  key: Extract<
+    RecommendationField,
+    'activity' | 'mood' | 'color' | 'country' | 'genre' | 'scene' | 'lyricalTheme'
+  >;
+  labels: { en: string; zh: string };
+}> = [
+  { key: 'activity', labels: { en: 'Activity', zh: '活动' } },
+  { key: 'mood', labels: { en: 'Mood', zh: '情绪' } },
+  { key: 'color', labels: { en: 'Color', zh: '颜色' } },
+  { key: 'country', labels: { en: 'Region / culture', zh: '地区 / 文化' } },
+  { key: 'genre', labels: { en: 'Genre', zh: '风格' } },
+  { key: 'scene', labels: { en: 'Scene', zh: '场景' } },
+  { key: 'lyricalTheme', labels: { en: 'Theme', zh: '主题' } },
 ];
 
-export function SignalSummary({ title = 'Current signal', values }: SignalSummaryProps) {
+export function SignalSummary({
+  emptyText,
+  language,
+  title,
+  values,
+}: SignalSummaryProps) {
   const activeEntries = FIELD_LABELS.filter(({ key }) => {
     const value = values[key];
     return typeof value === 'string' && value.length > 0;
@@ -25,7 +47,7 @@ export function SignalSummary({ title = 'Current signal', values }: SignalSummar
     return (
       <div className="signalSummary">
         <p className="signalSummaryLabel">{title}</p>
-        <p className="signalSummaryEmpty">No signal pinned yet. TaoMusic can still improvise.</p>
+        <p className="signalSummaryEmpty">{emptyText}</p>
       </div>
     );
   }
@@ -34,11 +56,11 @@ export function SignalSummary({ title = 'Current signal', values }: SignalSummar
     <div className="signalSummary">
       <p className="signalSummaryLabel">{title}</p>
       <div className="signalSummaryGrid">
-        {activeEntries.map(({ key, label }) => (
+        {activeEntries.map(({ key, labels }) => (
           <div className="signalSummaryItem" key={key}>
-            <span className="signalSummaryKey">{label}</span>
+            <span className="signalSummaryKey">{labels[language]}</span>
             <span className="signalSummaryValue">
-              {String(values[key]).replace(/-/g, ' ')}
+              {getOptionLabel(FIELD_OPTION_MAP[key], String(values[key]), language)}
             </span>
           </div>
         ))}

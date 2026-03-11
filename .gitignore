@@ -2,6 +2,7 @@
 node_modules
 .vercel
 dist
+.catalog-check
 .DS_Store
 *.log
 *.tsbuildinfo

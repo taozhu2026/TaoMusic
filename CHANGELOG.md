@@ -1,6 +1,17 @@
 # Changelog
 
-## 0.5.0 - Unreleased
+## 0.6.0 - 2026-03-11
+
+- Split the product into `/` input flow and `/result?id=...` result flow with temporary server-side result caching
+- Added a dedicated one-screen result route with a two-column layout and a `Current Constellation` / `Muse Card` flip panel
+- Added global theme preferences with `light`, `dark`, and `system` modes plus no-flash bootstrap behavior
+- Added full English and Simplified Chinese UI support with persisted language switching
+- Localized taxonomy labels, presets, bubble labels, and visible result-route controls
+- Replaced the tiny local seed fallback with a modular local catalog of 486 structured tracks
+- Added UI-language-aware ranking bias to favor Chinese and East Asian recommendations when the UI is in Chinese
+- Added standalone catalog validation as part of `npm run check`
+
+## 0.5.0 - 2026-03-11
 
 - Refactored the app into a state-driven two-stage flow with `home_input`, `generating`, `result_view`, and `tuning`
 - Added result-state compact header behavior, floating controls, and quick tune modifiers

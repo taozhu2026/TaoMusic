@@ -8,6 +8,9 @@ import type {
   RankedRecommendation,
 } from '@/src/features/recommendations/types';
 
+const EAST_ASIAN_REGIONS = new Set(['china', 'japan', 'korea']);
+const EAST_ASIAN_LANGUAGES = new Set(['zh', 'ja', 'ko']);
+
 const overlapScore = (needle: string[], haystack: string[]): number => {
   if (needle.length === 0 || haystack.length === 0) {
     return 0;
@@ -51,39 +54,70 @@ const popularityNoveltyScore = (candidate: MusicCandidate): number => {
   return 1 - Math.min(candidate.popularity / 100, 1);
 };
 
+const languageBiasScore = (
+  candidate: MusicCandidate,
+  profile: ContextProfile,
+): number => {
+  if (profile.raw.uiLanguage !== 'zh') {
+    return 0;
+  }
+
+  if (candidate.language === 'zh') {
+    return 1;
+  }
+
+  if (
+    EAST_ASIAN_LANGUAGES.has(candidate.language ?? '') ||
+    EAST_ASIAN_REGIONS.has(candidate.region ?? '')
+  ) {
+    return 0.45;
+  }
+
+  return 0;
+};
+
 const buildMatchReasons = (
   candidate: MusicCandidate,
   profile: ContextProfile,
 ): string[] => {
   const reasons: string[] = [];
+  const language = profile.raw.uiLanguage ?? 'en';
 
   if (overlapScore(profile.genrePreference, candidate.genreTags) > 0) {
-    reasons.push('genre aligned');
+    reasons.push(language === 'zh' ? '风格对齐' : 'genre aligned');
   }
 
   if (regionScore(candidate, profile) === 1) {
-    reasons.push('country matched');
+    reasons.push(language === 'zh' ? '地区贴合' : 'region matched');
   }
 
   if (
     overlapScore(
       uniqueStrings([...profile.activityTags, ...profile.moodTags, ...profile.sceneTags]),
-      uniqueStrings([...candidate.moodTags, ...candidate.instrumentationTags]),
+      uniqueStrings([
+        ...candidate.moodTags,
+        ...candidate.instrumentationTags,
+        ...(candidate.sceneTags ?? []),
+      ]),
     ) > 0.15
   ) {
-    reasons.push('mood matched');
+    reasons.push(language === 'zh' ? '情绪贴合' : 'mood matched');
   }
 
-  if (overlapScore(profile.sceneTags, candidate.moodTags) > 0) {
-    reasons.push('scene aligned');
+  if (overlapScore(profile.sceneTags, candidate.sceneTags ?? []) > 0) {
+    reasons.push(language === 'zh' ? '场景一致' : 'scene aligned');
   }
 
   if (overlapScore(profile.lyricalThemeTags, candidate.lyricalThemeTags) > 0) {
-    reasons.push('theme echoed');
+    reasons.push(language === 'zh' ? '主题呼应' : 'theme echoed');
   }
 
   if (profile.raw.color && candidate.artworkColorHint === profile.raw.color) {
-    reasons.push('color resonance');
+    reasons.push(language === 'zh' ? '颜色共振' : 'color resonance');
+  }
+
+  if (profile.raw.uiLanguage === 'zh' && candidate.language === 'zh') {
+    reasons.push('中文语感更贴近当前界面');
   }
 
   return reasons.slice(0, 3);
@@ -103,7 +137,11 @@ export const scoreCandidates = (
       const genreMatch = overlapScore(profile.genrePreference, candidate.genreTags);
       const activityMoodMatch = overlapScore(
         uniqueStrings([...profile.activityTags, ...profile.moodTags, ...profile.sceneTags]),
-        uniqueStrings([...candidate.moodTags, ...candidate.instrumentationTags]),
+        uniqueStrings([
+          ...candidate.moodTags,
+          ...candidate.instrumentationTags,
+          ...(candidate.sceneTags ?? []),
+        ]),
       );
       const lyricalThemeMatch = overlapScore(
         profile.lyricalThemeTags,
@@ -125,6 +163,7 @@ export const scoreCandidates = (
         colorVibeMatch * SCORE_WEIGHTS.colorVibeMatch +
         energyFocusMatch * SCORE_WEIGHTS.energyFocusMatch +
         noveltyScore * SCORE_WEIGHTS.novelty +
+        languageBiasScore(candidate, profile) * SCORE_WEIGHTS.languageBias +
         seedBonus;
 
       return {

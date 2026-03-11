@@ -33,7 +33,7 @@ const buildQueryPlan = (input: ReturnType<typeof mapContextToProfile>): QueryPla
     secondaryTerms,
     genre: input.raw.genre,
     region: input.regionPreference,
-    limit: 18,
+    limit: 24,
   };
 };
 
@@ -58,7 +58,7 @@ const buildProviderUsedLabel = (providers: ProviderDebugSummary[]): string => {
   );
 
   if (successful.length === 0) {
-    return 'seed-library fallback';
+    return 'local catalog fallback';
   }
 
   return successful.map((provider) => provider.name).join(' + ');
@@ -113,7 +113,7 @@ export const createRecommendation = async (
     providerResults.push({
       candidates,
       kind: fallbackProvider.kind,
-      message: 'Fallback seed library applied after external retrieval returned nothing.',
+      message: 'Fallback local catalog applied after external retrieval returned nothing.',
       provider: `${fallbackProvider.name}-recovery`,
       status: 'success',
     });

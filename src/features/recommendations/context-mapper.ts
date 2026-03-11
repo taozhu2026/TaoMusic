@@ -8,6 +8,7 @@ import {
   MOOD_MAPPINGS,
   SCENE_MAPPINGS,
   THEME_MAPPINGS,
+  getOptionLabel,
 } from '@/src/config/mappings';
 import { pickBySeed } from '@/src/lib/random';
 import { uniqueStrings } from '@/src/lib/text';
@@ -27,6 +28,7 @@ export const mapContextToProfile = (
   input: RecommendationInput,
 ): ContextProfile => {
   const normalizedInput = { ...input };
+  const language = normalizedInput.uiLanguage ?? 'en';
   let surpriseLabel: string | undefined;
   const seed = normalizedInput.rerollSeed ?? 'taomusic-default-seed';
 
@@ -34,15 +36,27 @@ export const mapContextToProfile = (
     if (!normalizedInput.country) {
       const surpriseCountry = pickBySeed(COUNTRY_OPTIONS, seed, 'country');
       normalizedInput.country = surpriseCountry.value;
-      surpriseLabel = `A detour through ${surpriseCountry.label}`;
+      const label = getOptionLabel(COUNTRY_OPTIONS, surpriseCountry.value, language);
+      surpriseLabel =
+        language === 'zh'
+          ? `偏向 ${label} 的一条侧线`
+          : `A detour through ${label}`;
     } else if (!normalizedInput.genre) {
       const surpriseGenre = pickBySeed(GENRE_OPTIONS, seed, 'genre');
       normalizedInput.genre = surpriseGenre.value;
-      surpriseLabel = `A sideways step into ${surpriseGenre.label.toLowerCase()}`;
+      const label = getOptionLabel(GENRE_OPTIONS, surpriseGenre.value, language);
+      surpriseLabel =
+        language === 'zh'
+          ? `向 ${label} 侧移一步`
+          : `A sideways step into ${label.toLowerCase()}`;
     } else if (!normalizedInput.color) {
       const surpriseColor = pickBySeed(COLOR_OPTIONS, seed, 'color');
       normalizedInput.color = surpriseColor.value;
-      surpriseLabel = `A flash of ${surpriseColor.label.toLowerCase()}`;
+      const label = getOptionLabel(COLOR_OPTIONS, surpriseColor.value, language);
+      surpriseLabel =
+        language === 'zh'
+          ? `补上一抹 ${label}`
+          : `A flash of ${label.toLowerCase()}`;
     }
   }
 

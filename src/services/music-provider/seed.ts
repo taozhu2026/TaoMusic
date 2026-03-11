@@ -1,4 +1,4 @@
-import { SEED_CANDIDATES } from '@/data/seed-candidates';
+import { LOCAL_CATALOG } from '@/data/catalog';
 
 import type {
   MusicCandidate,
@@ -12,8 +12,10 @@ const buildCandidateKeywords = (candidate: MusicCandidate): string[] => {
     candidate.artist,
     candidate.album,
     candidate.region,
+    candidate.language,
     ...candidate.genreTags,
     ...candidate.moodTags,
+    ...(candidate.sceneTags ?? []),
     ...candidate.instrumentationTags,
     ...candidate.lyricalThemeTags,
     ...candidate.searchKeywords,
@@ -24,7 +26,7 @@ const buildCandidateKeywords = (candidate: MusicCandidate): string[] => {
 
 export class SeedMusicProvider implements MusicProvider {
   kind: 'fallback' = 'fallback';
-  name = 'seed-library';
+  name = 'local-catalog';
 
   async fetchCandidates(plan: QueryPlan): Promise<MusicCandidate[]> {
     const queryTerms = [...plan.primaryTerms, ...plan.secondaryTerms].map((term) =>
@@ -32,10 +34,10 @@ export class SeedMusicProvider implements MusicProvider {
     );
 
     if (queryTerms.length === 0) {
-      return SEED_CANDIDATES.slice(0, plan.limit);
+      return LOCAL_CATALOG.slice(0, plan.limit);
     }
 
-    return [...SEED_CANDIDATES]
+    return [...LOCAL_CATALOG]
       .map((candidate) => {
         const keywords = buildCandidateKeywords(candidate);
         const keywordSet = new Set(keywords);
@@ -48,6 +50,6 @@ export class SeedMusicProvider implements MusicProvider {
       })
       .sort((left, right) => right.matchCount - left.matchCount)
       .map((result) => result.candidate)
-      .slice(0, plan.limit);
+      .slice(0, plan.limit * 6);
   }
 }

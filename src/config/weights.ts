@@ -6,4 +6,5 @@ export const SCORE_WEIGHTS = {
   colorVibeMatch: 0.08,
   energyFocusMatch: 0.06,
   novelty: 0.04,
+  languageBias: 0.1,
 } as const;
